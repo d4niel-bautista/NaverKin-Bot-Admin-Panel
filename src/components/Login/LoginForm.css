@@ -1,0 +1,16 @@
+.error {
+    display: flex;
+    align-items: center;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 20px; /* Add spacing between error message and form */
+}
+
+.error-icon {
+    font-size: 24px; /* Adjust the size of the icon */
+    margin-right: 4px; /* Add spacing between the icon and error text */
+}
+
+.error-text {
+    vertical-align: middle; /* Align the text vertically with the icon */
+}
