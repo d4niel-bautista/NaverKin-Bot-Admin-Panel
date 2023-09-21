@@ -7,7 +7,8 @@ import {
     Container,
     Grid,
 } from '@mui/material';
-import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import './LoginForm.css'; // Import a CSS file for custom styles
 
@@ -16,7 +17,7 @@ const LoginForm = () => {
         username: '',
         password: '',
     });
-    const [error, setError] = useState(''); // State for error message
+    const [message, setMessage] = useState(''); // State for message message
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,16 +27,31 @@ const LoginForm = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Basic client-side validation
-        if (formData.username === 'exampleuser' && formData.password === 'password123') {
+
+        const response = await fetch("http://localhost:8000/login", {method: "POST", body: JSON.stringify(formData)});
+        console.log(await response.json());
+        if (response.ok) {
             // Successful login
-            setError('');
-            console.log('Login successful');
+            setMessage((
+                <div className="success">
+                    <CheckCircleIcon className="success-icon" />
+                    <Typography variant="body1" color="success" className="success-text">
+                        Logging in...
+                    </Typography>
+                </div>
+            ));
         } else {
             // Wrong login
-            setError('Invalid username or password');
+            setMessage((
+                <div className="error">
+                    <ErrorIcon className="error-icon" /> {/* Use the ErrorOutlineRoundedIcon icon */}
+                    <Typography variant="body1" color="error" className="error-text">
+                        Invalid username or password
+                    </Typography>
+                </div>
+            ));
         }
     };
 
@@ -47,21 +63,14 @@ const LoginForm = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '60vh', // Set the minimum height to 60% of the viewport height
+                minHeight: '85vh', // Set the minimum height to 60% of the viewport height
             }}
         >
             <Paper elevation={3} style={{ padding: '20px', width: '100%' }}>
                 <Typography variant="h5" gutterBottom>
                     Login
                 </Typography>
-                {error && (
-                    <div className="error">
-                        <ErrorOutlineRoundedIcon className="error-icon" /> {/* Use the ErrorOutlineRoundedIcon icon */}
-                        <Typography variant="body1" color="error" className="error-text">
-                            {error}
-                        </Typography>
-                    </div>
-                )}
+                {message}
                 <form onSubmit={handleSubmit} style={{ width: '100%' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
