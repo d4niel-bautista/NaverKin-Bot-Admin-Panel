@@ -1,5 +1,6 @@
 import QuestionAnswerForm from "./components/QuestionAnswerForm/QuestionAnswerForm";
 import Accounts from "./components/Accounts/Accounts";
+import LoginForm from "./components/Login/LoginForm";
 
 const exampleAccounts = [
   {
@@ -110,6 +111,7 @@ function App() {
     <div className="App">
       <QuestionAnswerForm />
       <Accounts accounts={exampleAccounts}/>
+      <LoginForm />
     </div>
   );
 }

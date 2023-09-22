@@ -24,10 +24,17 @@ const QuestionAnswerForm = () => {
         }
     };
 
-    const handleSubmit = () => {
-        console.log('Question:', questionText);
-        console.log('Answer 1:', answer1Text);
-        console.log('Answer 2:', answer2Text);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        let questionForm = {}
+        questionForm['Question'] = questionText;
+        questionForm['Answer 1:'] = answer1Text;
+        questionForm['Answer 2:'] = answer2Text;
+
+        const response = await fetch("http://localhost:8000/submit_question_form", {method: "POST", body: JSON.stringify(questionForm)});
+
+        console.log(await response.json());
     };
 
     return (
