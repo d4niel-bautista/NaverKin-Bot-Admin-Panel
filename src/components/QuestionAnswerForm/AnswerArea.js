@@ -7,7 +7,7 @@ const AnswerArea = ({ answerLabel = 'Content', componentTitle = 'Answer', compon
     const handleTextChange = () => {
         let content = document.querySelector(`textarea[id="${componentId}_answerContent"]`).value;
         let postscript = document.querySelector(`textarea[id="${componentId}_answerPostscript"]`).value;
-        onTextChange({ content, postscript });
+        onTextChange( content + "\n\n" + postscript );
     };
 
     return (

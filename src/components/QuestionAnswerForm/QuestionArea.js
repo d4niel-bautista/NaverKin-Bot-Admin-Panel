@@ -7,7 +7,7 @@ const QuestionArea = ({ questionDesc = 'Create a question to be posted on Naver 
   const handleTextChange = () => {
     let title = document.querySelector('textarea[id="questionTitle"]').value;
     let content = document.querySelector('textarea[id="questionContent"]').value;
-    onTextChange({ title, content });
+    onTextChange( title + "\n\n" + content );
   };
 
   return (

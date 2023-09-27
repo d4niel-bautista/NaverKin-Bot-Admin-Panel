@@ -4,9 +4,9 @@ import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 
 const QuestionAnswerForm = () => {
-    const [questionText, setQuestionText] = useState({title: '', content: ''});
-    const [answer1Text, setAnswer1Text] = useState({content: '', postscript: ''});
-    const [answer2Text, setAnswer2Text] = useState({content: '', postscript: ''});
+    const [questionText, setQuestionText] = useState("");
+    const [answer1Text, setAnswer1Text] = useState("");
+    const [answer2Text, setAnswer2Text] = useState("");
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -29,10 +29,11 @@ const QuestionAnswerForm = () => {
 
         let questionForm = {}
         questionForm['Question'] = questionText;
-        questionForm['Answer 1:'] = answer1Text;
-        questionForm['Answer 2:'] = answer2Text;
+        questionForm['Answer_1'] = answer1Text;
+        questionForm['Answer_2'] = answer2Text;
 
         const response = await fetch("http://localhost:8000/submit_question_form", {method: "POST", body: JSON.stringify(questionForm)});
+        console.log(questionForm);
 
         console.log(await response.json());
     };
