@@ -4,7 +4,7 @@ import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 
 const QuestionAnswerForm = () => {
-    const [questionText, setQuestionText] = useState("");
+    const [questionText, setQuestionText] = useState({});
     const [answer1Text, setAnswer1Text] = useState("");
     const [answer2Text, setAnswer2Text] = useState("");
 
@@ -28,11 +28,12 @@ const QuestionAnswerForm = () => {
         e.preventDefault();
 
         let questionForm = {}
-        questionForm['Question'] = questionText;
-        questionForm['Answer_1'] = answer1Text;
-        questionForm['Answer_2'] = answer2Text;
-
-        const response = await fetch("http://localhost:8000/submit_question_form", {method: "POST", body: JSON.stringify(questionForm)});
+        questionForm['question'] = questionText;
+        questionForm['answer_advertisement'] = answer1Text;
+        questionForm['answer_exposure'] = answer2Text;
+        const response = await fetch("http://localhost:8000/v1/api/question_answer", {method: "POST", body: JSON.stringify(questionForm), headers: {
+            "Content-Type": "application/json",
+          }});
         console.log(questionForm);
 
         console.log(await response.json());
