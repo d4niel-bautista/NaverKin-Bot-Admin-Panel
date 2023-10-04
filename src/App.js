@@ -1,6 +1,7 @@
 import QuestionAnswerForm from "./components/QuestionAnswerForm/QuestionAnswerForm";
-import Accounts from "./components/Accounts/Accounts";
+import AccountsTable from "./components/Accounts/AccountsTable";
 import LoginForm from "./components/Login/LoginForm";
+import AddAccount from "./components/Accounts/AddAccount";
 
 const exampleAccounts = [
   {
@@ -109,8 +110,9 @@ const exampleAccounts = [
 function App() {
   return (
     <div className="App">
+      <AddAccount />
       <QuestionAnswerForm />
-      <Accounts accounts={exampleAccounts}/>
+      <AccountsTable accounts={exampleAccounts}/>
       <LoginForm />
     </div>
   );
