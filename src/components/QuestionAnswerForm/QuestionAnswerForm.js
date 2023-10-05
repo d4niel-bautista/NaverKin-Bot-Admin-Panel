@@ -4,7 +4,7 @@ import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 
 const QuestionAnswerForm = () => {
-    const [questionText, setQuestionText] = useState({});
+    const [questionText, setQuestionText] = useState({'title': '', 'content': ''});
     const [answer1Text, setAnswer1Text] = useState("");
     const [answer2Text, setAnswer2Text] = useState("");
 

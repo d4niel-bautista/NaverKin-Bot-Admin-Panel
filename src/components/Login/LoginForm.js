@@ -30,7 +30,9 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:8000/login", {method: "POST", body: JSON.stringify(formData)});
+        const response = await fetch("http://localhost:8000/login", {method: "POST", body: JSON.stringify(formData), headers: {
+            "Content-Type": "application/json",}});
+        // const response = await fetch("http://localhost:8000/", {method: "GET"});
         console.log(await response.json());
         if (response.ok) {
             // Successful login
