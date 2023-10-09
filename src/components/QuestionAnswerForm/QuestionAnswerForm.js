@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Box, Card, CardContent, Divider, Button, TextField, MenuItem } from '@mui/material';
+import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton } from '@mui/material';
 import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
@@ -27,6 +28,14 @@ const QuestionAnswerForm = () => {
 
     const changeFormType = (e) => {
         setFormType(e.target.value);
+    }
+
+    const generateText = () => {
+
+    }
+
+    const openChatGPTConfigs = () => {
+        
     }
 
     const handleSubmit = async (e) => {
@@ -59,18 +68,34 @@ const QuestionAnswerForm = () => {
         >
             <Card variant="outlined" sx={{ width: '50%', boxShadow: 3 }}>
                 <CardContent sx={{ maxHeight: '85vh', overflowY: 'auto' }}>
-                    <TextField
-                        id="form_type"
-                        select
-                        label="Form Type"
-                        name='form_type'
-                        sx={{ width: '200px' }}
-                        onChange={changeFormType}
-                        defaultValue={"1:2"}
-                    >
-                        <MenuItem value="1:1">1 Question, 1 Answer</MenuItem>
-                        <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
-                    </TextField>
+                    <Grid container spacing={2} paddingTop={"24px"} paddingX={"16px"}
+                        alignItems={"center"}>
+                        <Grid xs={6} textAlign="left">
+                            <TextField
+                                id="form_type"
+                                select
+                                label="Form Type"
+                                name='form_type'
+                                sx={{ width: '200px' }}
+                                onChange={changeFormType}
+                                defaultValue={"1:2"}
+                            >
+                                <MenuItem value="1:1">1 Question, 1 Answer</MenuItem>
+                                <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
+                            </TextField>
+                        </Grid>
+                        <Grid xs={5} textAlign="right">
+                            <Button variant="contained" color="primary"
+                                onClick={generateText}>
+                                Generate Text
+                            </Button>
+                        </Grid>
+                        <Grid xs={1} textAlign="center">
+                            <IconButton onClick={openChatGPTConfigs}>
+                                <SettingsOutlinedIcon sx={{ fontSize: 32 }}/>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
                     <Divider sx={{ my: 2 }} />
                     <QuestionArea onTextChange={(text) => handleTextChange('question', text)} />
                     <Divider sx={{ my: 2 }} />
