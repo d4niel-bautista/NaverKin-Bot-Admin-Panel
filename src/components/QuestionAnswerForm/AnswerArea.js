@@ -1,14 +1,14 @@
 import React from 'react';
 import { TextField, Typography, Box } from '@mui/material';
 
-const AnswerArea = ({ answerLabel = 'Content', componentTitle = 'Answer', componentDesc = 'This is for test', componentId, onTextChange }) => {
+const AnswerArea = ({ answerText, answerLabel = 'Content', componentTitle = 'Answer', componentDesc = 'This is for test', componentId, onTextChange }) => {
     const descriptionLines = componentDesc.split('\\n');
 
     const handleTextChange = () => {
         let content = document.querySelector(`textarea[id="${componentId}_answerContent"]`).value;
         let postscript = document.querySelector(`textarea[id="${componentId}_answerPostscript"]`).value;
-        const answerText = postscript !== "" ? content + "\n\n" + postscript : content;
-        onTextChange( answerText );
+        const answerText = { content, postscript };
+        onTextChange(answerText);
     };
 
     return (
@@ -36,6 +36,7 @@ const AnswerArea = ({ answerLabel = 'Content', componentTitle = 'Answer', compon
                     rows={8}
                     margin="normal"
                     onChange={handleTextChange}
+                    value={answerText.content}
                 />
                 <TextField
                     id={componentId + '_answerPostscript'}
@@ -46,6 +47,7 @@ const AnswerArea = ({ answerLabel = 'Content', componentTitle = 'Answer', compon
                     minRows={2}
                     margin="normal"
                     onChange={handleTextChange}
+                    value={answerText.postscript}
                 />
             </form>
         </Box>

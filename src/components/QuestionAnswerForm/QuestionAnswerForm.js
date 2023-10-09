@@ -6,8 +6,8 @@ import AnswerArea from './AnswerArea';
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
     const [questionText, setQuestionText] = useState({ 'title': '', 'content': '' });
-    const [answer1Text, setAnswer1Text] = useState("");
-    const [answer2Text, setAnswer2Text] = useState("");
+    const [answer1Text, setAnswer1Text] = useState({ 'content': '', 'postscript': '' });
+    const [answer2Text, setAnswer2Text] = useState({ 'content': '', 'postscript': '' });
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -26,7 +26,7 @@ const QuestionAnswerForm = () => {
     };
 
     const changeFormType = (e) => {
-        setFormType(e.target.value)
+        setFormType(e.target.value);
     }
 
     const handleSubmit = async (e) => {
@@ -35,10 +35,10 @@ const QuestionAnswerForm = () => {
         let questionForm = {}
         questionForm['question'] = questionText;
         if (formType === "1:1") {
-            questionForm['answer'] = answer1Text;
+            questionForm['answer'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
         } else if ((formType === "1:2")) {
-            questionForm['answer_advertisement'] = answer1Text;
-            questionForm['answer_exposure'] = answer2Text;
+            questionForm['answer_advertisement'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
+            questionForm['answer_exposure'] = answer2Text.postscript !== "" ? answer2Text.content + "\n\n" + answer2Text.postscript : answer2Text.content;
         }
 
         const response = await fetch("http://localhost:8000/v1/api/question_answer", {
@@ -75,17 +75,20 @@ const QuestionAnswerForm = () => {
                     <QuestionArea onTextChange={(text) => handleTextChange('question', text)} />
                     <Divider sx={{ my: 2 }} />
                     {formType === "1:1" ?
-                        <AnswerArea componentTitle='Answer'
+                        <AnswerArea answerText={answer1Text}
+                            componentTitle='Answer'
                             componentDesc='Answer to the question.'
                             componentId='answer'
                             onTextChange={(text) => handleTextChange('answer1', text)} /> :
                         <>
-                            <AnswerArea componentTitle='Answer 1 (Advertisement)'
+                            <AnswerArea answerText={answer1Text}
+                                componentTitle='Answer 1 (Advertisement)'
                                 componentDesc='Answer that advertises used by a low level ID.'
                                 componentId='advertising_answer'
                                 onTextChange={(text) => handleTextChange('answer1', text)} />
                             <Divider sx={{ my: 2 }} />
-                            <AnswerArea componentTitle='Answer 2 (Exposure)'
+                            <AnswerArea answerText={answer2Text}
+                                componentTitle='Answer 2 (Exposure)'
                                 componentDesc='Answer that gives general information used by a high level ID. Used for exposure to show up in top-ranked results.'
                                 componentId='exposure_answer'
                                 onTextChange={(text) => handleTextChange('answer2', text)} />
