@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton } from '@mui/material';
 import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
+import EditPromptConfigs from './EditPromptConfigs';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const QuestionAnswerForm = () => {
@@ -10,6 +11,7 @@ const QuestionAnswerForm = () => {
     const [answer1Text, setAnswer1Text] = useState({ 'content': '', 'postscript': '' });
     const [answer2Text, setAnswer2Text] = useState({ 'content': '', 'postscript': '' });
     const [loadingState, setLoadingState] = useState(false);
+    const [promptConfigsOpen, setPromptConfigsOpen] = useState(false);
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -43,8 +45,12 @@ const QuestionAnswerForm = () => {
         setLoadingState(false);
     }
 
-    const openChatGPTConfigs = () => {
+    const openPromptConfigs = () => {
+        setPromptConfigsOpen(true);
+    }
 
+    const closePromptConfigs = () => {
+        setPromptConfigsOpen(false);
     }
 
     const handleSubmit = async (e) => {
@@ -65,91 +71,94 @@ const QuestionAnswerForm = () => {
                 "Content-Type": "application/json",
             }
         });
-        
-        if (response.ok){
+
+        if (response.ok) {
             console.log(await response.json());
         }
-        
+
         setLoadingState(false);
     };
 
     return (
-        <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            height="100vh"
-        >
-            <Card variant="outlined" sx={{ width: '50%', boxShadow: 3 }}>
-                <CardContent sx={{ maxHeight: '85vh', overflowY: 'auto' }}>
-                    <Grid container spacing={2} paddingTop={"24px"} paddingX={"16px"}
-                        alignItems={"center"}>
-                        <Grid xs={6} textAlign="left">
-                            <TextField
-                                id="form_type"
-                                select
-                                label="Form Type"
-                                name='form_type'
-                                sx={{ width: '200px' }}
-                                onChange={changeFormType}
-                                defaultValue={"1:2"}
-                                disabled={loadingState}
-                            >
-                                <MenuItem value="1:1">1 Question, 1 Answer</MenuItem>
-                                <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
-                            </TextField>
+        <>
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                height="100vh"
+            >
+                <Card variant="outlined" sx={{ width: '50%', boxShadow: 3 }}>
+                    <CardContent sx={{ maxHeight: '85vh', overflowY: 'auto' }}>
+                        <Grid container spacing={2} paddingTop={"24px"} paddingX={"16px"}
+                            alignItems={"center"}>
+                            <Grid xs={6} textAlign="left">
+                                <TextField
+                                    id="form_type"
+                                    select
+                                    label="Form Type"
+                                    name='form_type'
+                                    sx={{ width: '200px' }}
+                                    onChange={changeFormType}
+                                    defaultValue={"1:2"}
+                                    disabled={loadingState}
+                                >
+                                    <MenuItem value="1:1">1 Question, 1 Answer</MenuItem>
+                                    <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid xs={5} textAlign="right">
+                                <Button variant="contained" color="primary"
+                                    onClick={generateContent}
+                                    disabled={loadingState}>
+                                    Generate Content
+                                </Button>
+                            </Grid>
+                            <Grid xs={1} textAlign="center">
+                                <IconButton onClick={openPromptConfigs}
+                                    disabled={loadingState}>
+                                    <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
+                                </IconButton>
+                            </Grid>
                         </Grid>
-                        <Grid xs={5} textAlign="right">
-                            <Button variant="contained" color="primary"
-                                onClick={generateContent}
-                                disabled={loadingState}>
-                                Generate Content
-                            </Button>
-                        </Grid>
-                        <Grid xs={1} textAlign="center">
-                            <IconButton onClick={openChatGPTConfigs}
-                                disabled={loadingState}>
-                                <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                    <Divider sx={{ my: 2 }} />
-                    <QuestionArea questionText={questionText} onTextChange={(text) => handleTextChange('question', text)} loadingState={loadingState} />
-                    <Divider sx={{ my: 2 }} />
-                    {formType === "1:1" ?
-                        <AnswerArea answerText={answer1Text}
-                            componentTitle='Answer'
-                            componentDesc='Answer to the question.'
-                            componentId='answer'
-                            onTextChange={(text) => handleTextChange('answer1', text)} /> :
-                        <>
+                        <Divider sx={{ my: 2 }} />
+                        <QuestionArea questionText={questionText} onTextChange={(text) => handleTextChange('question', text)} loadingState={loadingState} />
+                        <Divider sx={{ my: 2 }} />
+                        {formType === "1:1" ?
                             <AnswerArea answerText={answer1Text}
-                                componentTitle='Answer 1 (Advertisement)'
-                                componentDesc='Answer that advertises used by a low level ID.'
-                                componentId='advertising_answer'
-                                onTextChange={(text) => handleTextChange('answer1', text)}
-                                loadingState={loadingState} />
-                            <Divider sx={{ my: 2 }} />
-                            <AnswerArea answerText={answer2Text}
-                                componentTitle='Answer 2 (Exposure)'
-                                componentDesc='Answer that gives general information used by a high level ID. Used for exposure to show up in top-ranked results.'
-                                componentId='exposure_answer'
-                                onTextChange={(text) => handleTextChange('answer2', text)}
-                                loadingState={loadingState} />
-                        </>
-                    }
-                    <Divider sx={{ my: 2 }} />
-                    <Box display="flex" justifyContent="center">
-                        <Button variant="contained" color="primary" sx={{ mt: 3, fontSize: '1.5rem' }}
-                            onClick={handleSubmit}
-                            disabled={loadingState}>
-                            Submit
-                        </Button>
-                    </Box>
-                </CardContent>
-            </Card>
-        </Box>
+                                componentTitle='Answer'
+                                componentDesc='Answer to the question.'
+                                componentId='answer'
+                                onTextChange={(text) => handleTextChange('answer1', text)} /> :
+                            <>
+                                <AnswerArea answerText={answer1Text}
+                                    componentTitle='Answer 1 (Advertisement)'
+                                    componentDesc='Answer that advertises used by a low level ID.'
+                                    componentId='advertising_answer'
+                                    onTextChange={(text) => handleTextChange('answer1', text)}
+                                    loadingState={loadingState} />
+                                <Divider sx={{ my: 2 }} />
+                                <AnswerArea answerText={answer2Text}
+                                    componentTitle='Answer 2 (Exposure)'
+                                    componentDesc='Answer that gives general information used by a high level ID. Used for exposure to show up in top-ranked results.'
+                                    componentId='exposure_answer'
+                                    onTextChange={(text) => handleTextChange('answer2', text)}
+                                    loadingState={loadingState} />
+                            </>
+                        }
+                        <Divider sx={{ my: 2 }} />
+                        <Box display="flex" justifyContent="center">
+                            <Button variant="contained" color="primary" sx={{ mt: 3, fontSize: '1.5rem' }}
+                                onClick={handleSubmit}
+                                disabled={loadingState}>
+                                Submit
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Box>
+            {promptConfigsOpen && (<EditPromptConfigs openModal={openPromptConfigs} closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} />)}
+        </>
     );
 };
 
