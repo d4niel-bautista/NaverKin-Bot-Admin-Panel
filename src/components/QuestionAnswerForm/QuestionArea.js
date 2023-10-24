@@ -1,13 +1,13 @@
 import React from 'react';
 import { TextField, Typography, Box } from '@mui/material';
 
-const QuestionArea = ({ questionDesc = 'Create a question to be posted on Naver Kin.', onTextChange }) => {
+const QuestionArea = ({ questionText, questionDesc = 'Create a question to be posted on Naver Kin.', onTextChange, loadingState }) => {
   const descriptionLines = questionDesc.split('\n');
 
   const handleTextChange = () => {
     let title = document.querySelector('textarea[id="questionTitle"]').value;
     let content = document.querySelector('textarea[id="questionContent"]').value;
-    onTextChange( {title, content} );
+    onTextChange({ title, content });
   };
 
   return (
@@ -34,6 +34,8 @@ const QuestionArea = ({ questionDesc = 'Create a question to be posted on Naver 
           multiline
           margin="normal"
           onChange={handleTextChange}
+          value={questionText['title']}
+          disabled={loadingState}
         />
         <TextField
           id='questionContent'
@@ -45,6 +47,8 @@ const QuestionArea = ({ questionDesc = 'Create a question to be posted on Naver 
           margin="normal"
           sx={{ marginBottom: 2 }}
           onChange={handleTextChange}
+          value={questionText['content']}
+          disabled={loadingState}
         />
       </form>
     </Box>

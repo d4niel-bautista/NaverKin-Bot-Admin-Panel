@@ -9,6 +9,7 @@ const QuestionAnswerForm = () => {
     const [questionText, setQuestionText] = useState({ 'title': '', 'content': '' });
     const [answer1Text, setAnswer1Text] = useState({ 'content': '', 'postscript': '' });
     const [answer2Text, setAnswer2Text] = useState({ 'content': '', 'postscript': '' });
+    const [loadingState, setLoadingState] = useState(false);
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -30,12 +31,20 @@ const QuestionAnswerForm = () => {
         setFormType(e.target.value);
     }
 
-    const generateText = () => {
-
+    const generateContent = async () => {
+        setLoadingState(true);
+        const response = await fetch("http://localhost:8000/v1/api/generate_form_content", { method: "GET" });
+        if (response.ok) {
+            const data = await response.json();
+            setQuestionText(data['question']);
+            setAnswer1Text({ 'content': data['answer_advertisement'], 'postscript': answer1Text['postscript'] });
+            setAnswer2Text({ 'content': data['answer_exposure'], 'postscript': answer2Text['postscript'] });
+        }
+        setLoadingState(false);
     }
 
     const openChatGPTConfigs = () => {
-        
+
     }
 
     const handleSubmit = async (e) => {
@@ -86,18 +95,18 @@ const QuestionAnswerForm = () => {
                         </Grid>
                         <Grid xs={5} textAlign="right">
                             <Button variant="contained" color="primary"
-                                onClick={generateText}>
-                                Generate Text
+                                onClick={generateContent}>
+                                Generate Content
                             </Button>
                         </Grid>
                         <Grid xs={1} textAlign="center">
                             <IconButton onClick={openChatGPTConfigs}>
-                                <SettingsOutlinedIcon sx={{ fontSize: 32 }}/>
+                                <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
                             </IconButton>
                         </Grid>
                     </Grid>
                     <Divider sx={{ my: 2 }} />
-                    <QuestionArea onTextChange={(text) => handleTextChange('question', text)} />
+                    <QuestionArea questionText={questionText} onTextChange={(text) => handleTextChange('question', text)} loadingState={loadingState} />
                     <Divider sx={{ my: 2 }} />
                     {formType === "1:1" ?
                         <AnswerArea answerText={answer1Text}
@@ -110,19 +119,22 @@ const QuestionAnswerForm = () => {
                                 componentTitle='Answer 1 (Advertisement)'
                                 componentDesc='Answer that advertises used by a low level ID.'
                                 componentId='advertising_answer'
-                                onTextChange={(text) => handleTextChange('answer1', text)} />
+                                onTextChange={(text) => handleTextChange('answer1', text)}
+                                loadingState={loadingState} />
                             <Divider sx={{ my: 2 }} />
                             <AnswerArea answerText={answer2Text}
                                 componentTitle='Answer 2 (Exposure)'
                                 componentDesc='Answer that gives general information used by a high level ID. Used for exposure to show up in top-ranked results.'
                                 componentId='exposure_answer'
-                                onTextChange={(text) => handleTextChange('answer2', text)} />
+                                onTextChange={(text) => handleTextChange('answer2', text)}
+                                loadingState={loadingState} />
                         </>
                     }
                     <Divider sx={{ my: 2 }} />
                     <Box display="flex" justifyContent="center">
                         <Button variant="contained" color="primary" sx={{ mt: 3, fontSize: '1.5rem' }}
-                            onClick={handleSubmit}>
+                            onClick={handleSubmit}
+                            disabled={loadingState}>
                             Submit
                         </Button>
                     </Box>

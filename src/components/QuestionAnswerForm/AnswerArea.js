@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Typography, Box } from '@mui/material';
 
-const AnswerArea = ({ answerText, answerLabel = 'Content', componentTitle = 'Answer', componentDesc = 'This is for test', componentId, onTextChange }) => {
+const AnswerArea = ({ answerText, answerLabel = 'Content', componentTitle = 'Answer', componentDesc = 'This is for test', componentId, onTextChange, loadingState }) => {
     const descriptionLines = componentDesc.split('\\n');
 
     const handleTextChange = () => {
@@ -37,6 +37,7 @@ const AnswerArea = ({ answerText, answerLabel = 'Content', componentTitle = 'Ans
                     margin="normal"
                     onChange={handleTextChange}
                     value={answerText.content}
+                    disabled={loadingState}
                 />
                 <TextField
                     id={componentId + '_answerPostscript'}
@@ -48,6 +49,7 @@ const AnswerArea = ({ answerText, answerLabel = 'Content', componentTitle = 'Ans
                     margin="normal"
                     onChange={handleTextChange}
                     value={answerText.postscript}
+                    disabled={loadingState}
                 />
             </form>
         </Box>
