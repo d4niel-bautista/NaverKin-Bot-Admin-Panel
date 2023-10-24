@@ -48,6 +48,7 @@ const QuestionAnswerForm = () => {
     }
 
     const handleSubmit = async (e) => {
+        setLoadingState(true);
         e.preventDefault();
 
         let questionForm = {}
@@ -64,7 +65,12 @@ const QuestionAnswerForm = () => {
                 "Content-Type": "application/json",
             }
         });
-        console.log(await response.json());
+        
+        if (response.ok){
+            console.log(await response.json());
+        }
+        
+        setLoadingState(false);
     };
 
     return (
@@ -88,6 +94,7 @@ const QuestionAnswerForm = () => {
                                 sx={{ width: '200px' }}
                                 onChange={changeFormType}
                                 defaultValue={"1:2"}
+                                disabled={loadingState}
                             >
                                 <MenuItem value="1:1">1 Question, 1 Answer</MenuItem>
                                 <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
@@ -95,12 +102,14 @@ const QuestionAnswerForm = () => {
                         </Grid>
                         <Grid xs={5} textAlign="right">
                             <Button variant="contained" color="primary"
-                                onClick={generateContent}>
+                                onClick={generateContent}
+                                disabled={loadingState}>
                                 Generate Content
                             </Button>
                         </Grid>
                         <Grid xs={1} textAlign="center">
-                            <IconButton onClick={openChatGPTConfigs}>
+                            <IconButton onClick={openChatGPTConfigs}
+                                disabled={loadingState}>
                                 <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
                             </IconButton>
                         </Grid>
