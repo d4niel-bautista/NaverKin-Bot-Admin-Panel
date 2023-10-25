@@ -7,8 +7,11 @@ import {
     TextField,
     Button,
     Typography,
-    Divider
+    Divider,
+    Grid,
+    IconButton
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EditPromptConfigs = ({ openModal, closeModal, isModalOpen }) => {
     const [promptContent, setPromptContent] = useState({ 'query': '', 'prompt': '', 'prohibited_words': '' });
@@ -31,68 +34,92 @@ const EditPromptConfigs = ({ openModal, closeModal, isModalOpen }) => {
     return (
         <Dialog open={isModalOpen} onClose={closeModal} maxWidth='md' fullWidth>
             <DialogTitle>
-                    Prompt Configs
+                Prompt Configs
+                <IconButton onClick={closeModal} sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8
+                }}>
+                    <CloseIcon sx={{ fontSize: 32 }} />
+                </IconButton>
             </DialogTitle>
             <DialogContent>
-                <Typography variant="body1">
-                    Question
-                </Typography>
-                <TextField
-                    label="Query"
-                    name="question_query"
-                    fullWidth
-                    margin="dense"
-                    rows={4}
-                    multiline
-                />
-                <TextField
-                    label="Prompt"
-                    name="question_prompt"
-                    fullWidth
-                    margin={"dense"}
-                    rows={4}
-                    multiline
-                />
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="body1">
-                    Answer 1 (Advertisement)
-                </Typography>
-                <TextField
-                    label="Query"
-                    name="answer1_query"
-                    fullWidth
-                    margin="dense"
-                    rows={4}
-                    multiline
-                />
-                <TextField
-                    label="Prompt"
-                    name="answer1_prompt"
-                    fullWidth
-                    margin="dense"
-                    rows={4}
-                    multiline
-                />
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="body1">
-                    Answer 2 (Exposure)
-                </Typography>
-                <TextField
-                    label="Query"
-                    name="answer2_query"
-                    fullWidth
-                    margin="dense"
-                    rows={4}
-                    multiline
-                />
-                <TextField
-                    label="Prompt"
-                    name="answer2_prompt"
-                    fullWidth
-                    margin="dense"
-                    rows={4}
-                    multiline
-                />
+                <Grid container spacing={2}>
+                    <Grid item xs={7}>
+                        <Typography variant="body1">
+                            Question
+                        </Typography>
+                        <TextField
+                            label="Query"
+                            name="question_query"
+                            fullWidth
+                            margin="dense"
+                            rows={2}
+                            multiline
+                        />
+                        <TextField
+                            label="Prompt"
+                            name="question_prompt"
+                            fullWidth
+                            margin={"dense"}
+                            rows={4}
+                            multiline
+                        />
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="body1">
+                            Answer 1 (Advertisement)
+                        </Typography>
+                        <TextField
+                            label="Query"
+                            name="answer1_query"
+                            fullWidth
+                            margin="dense"
+                            rows={2}
+                            multiline
+                        />
+                        <TextField
+                            label="Prompt"
+                            name="answer1_prompt"
+                            fullWidth
+                            margin="dense"
+                            rows={4}
+                            multiline
+                        />
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="body1">
+                            Answer 2 (Exposure)
+                        </Typography>
+                        <TextField
+                            label="Query"
+                            name="answer2_query"
+                            fullWidth
+                            margin="dense"
+                            rows={2}
+                            multiline
+                        />
+                        <TextField
+                            label="Prompt"
+                            name="answer2_prompt"
+                            fullWidth
+                            margin="dense"
+                            rows={4}
+                            multiline
+                        />
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Typography variant="body1">
+                            Prohibited Words
+                        </Typography>
+                        <TextField
+                            label="List"
+                            name="prohibited_words"
+                            fullWidth
+                            margin="dense"
+                            rows={20}
+                            multiline
+                        />
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleSubmit} color="primary">
