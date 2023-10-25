@@ -13,21 +13,73 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const EditPromptConfigs = ({ openModal, closeModal, isModalOpen }) => {
-    const [promptContent, setPromptContent] = useState({ 'query': '', 'prompt': '', 'prohibited_words': '' });
+const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
+    const onTextChange = (e) => {
+        setPromptConfigs((promptConfigs) => ({
+            ...promptConfigs,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    return (
+        <>
+            <Typography variant="body1">
+                {description}
+            </Typography>
+            <TextField
+                label="Query"
+                name="query"
+                id={id + "_query"}
+                fullWidth
+                margin="dense"
+                rows={2}
+                multiline
+                value={promptConfigs['query']}
+                onChange={onTextChange}
+            />
+            <TextField
+                label="Prompt"
+                name="prompt"
+                id={id + "_prompt"}
+                fullWidth
+                margin={"dense"}
+                rows={4}
+                multiline
+                value={promptConfigs['prompt']}
+                onChange={onTextChange}
+            />
+        </>
+    );
+}
+
+const EditPromptConfigs = ({ closeModal, isModalOpen }) => {
+    const [questionPromptConfigs, setQuestionPromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [prohibitedWords, setProhibitedWords] = useState("");
 
     useEffect(() => {
         const getPromptConfigs = async () => {
             const response = await fetch("http://localhost:8000/v1/api/prompt_configs", { method: "GET" });
 
-            console.log(await response.json())
+            if (response.ok) {
+                const data = await response.json();
+                setQuestionPromptConfigs({'query': data['question']['query'], 'prompt': data['question']['prompt']});
+                setAnswerAdvertisementPromptConfigs({'query': data['answer_advertisement']['query'], 'prompt': data['answer_advertisement']['prompt']});
+                setAnswerExposurePromptConfigs({'query': data['answer_exposure']['query'], 'prompt': data['answer_exposure']['prompt']});
+                setProhibitedWords(data['prohibited_words']);
+            }
         }
         getPromptConfigs();
     }, [])
 
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         // You can handle the form data here, for example, by sending it to an API.
-        console.log(promptContent);
+        console.log(questionPromptConfigs);
+        console.log(answerAdvertisementPromptConfigs);
+        console.log(answerExposurePromptConfigs);
+        console.log(prohibitedWords);
         closeModal();
     };
 
@@ -46,65 +98,20 @@ const EditPromptConfigs = ({ openModal, closeModal, isModalOpen }) => {
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={7}>
-                        <Typography variant="body1">
-                            Question
-                        </Typography>
-                        <TextField
-                            label="Query"
-                            name="question_query"
-                            fullWidth
-                            margin="dense"
-                            rows={2}
-                            multiline
-                        />
-                        <TextField
-                            label="Prompt"
-                            name="question_prompt"
-                            fullWidth
-                            margin={"dense"}
-                            rows={4}
-                            multiline
-                        />
+                        <PromptConfig description={"Question"}
+                            id={"answer_advertisement"}
+                            promptConfigs={questionPromptConfigs}
+                            setPromptConfigs={setQuestionPromptConfigs} />
                         <Divider sx={{ my: 2 }} />
-                        <Typography variant="body1">
-                            Answer 1 (Advertisement)
-                        </Typography>
-                        <TextField
-                            label="Query"
-                            name="answer1_query"
-                            fullWidth
-                            margin="dense"
-                            rows={2}
-                            multiline
-                        />
-                        <TextField
-                            label="Prompt"
-                            name="answer1_prompt"
-                            fullWidth
-                            margin="dense"
-                            rows={4}
-                            multiline
-                        />
+                        <PromptConfig description={"Answer 1 (Advertisement)"}
+                            id={"answer_advertisement"}
+                            promptConfigs={answerAdvertisementPromptConfigs}
+                            setPromptConfigs={setAnswerAdvertisementPromptConfigs} />
                         <Divider sx={{ my: 2 }} />
-                        <Typography variant="body1">
-                            Answer 2 (Exposure)
-                        </Typography>
-                        <TextField
-                            label="Query"
-                            name="answer2_query"
-                            fullWidth
-                            margin="dense"
-                            rows={2}
-                            multiline
-                        />
-                        <TextField
-                            label="Prompt"
-                            name="answer2_prompt"
-                            fullWidth
-                            margin="dense"
-                            rows={4}
-                            multiline
-                        />
+                        <PromptConfig description={"Answer 2 (Exposure)"}
+                            id={"answer_exposure"}
+                            promptConfigs={answerExposurePromptConfigs}
+                            setPromptConfigs={setAnswerExposurePromptConfigs} />
                     </Grid>
                     <Grid item xs={5}>
                         <Typography variant="body1">
@@ -117,16 +124,18 @@ const EditPromptConfigs = ({ openModal, closeModal, isModalOpen }) => {
                             margin="dense"
                             rows={20}
                             multiline
+                            value={prohibitedWords}
+                            onChange={(e) => setProhibitedWords(e.target.value)}
                         />
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSubmit} color="primary">
-                    Save
-                </Button>
                 <Button onClick={closeModal} color="secondary">
                     Cancel
+                </Button>
+                <Button onClick={handleSubmit} color="primary">
+                    Save
                 </Button>
             </DialogActions>
         </Dialog>
