@@ -75,11 +75,21 @@ const EditPromptConfigs = ({ closeModal, isModalOpen }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // You can handle the form data here, for example, by sending it to an API.
-        console.log(questionPromptConfigs);
-        console.log(answerAdvertisementPromptConfigs);
-        console.log(answerExposurePromptConfigs);
-        console.log(prohibitedWords);
+        let promptConfigsUpdate = {};
+        promptConfigsUpdate['question'] = questionPromptConfigs;
+        promptConfigsUpdate['answer_advertisement'] = answerAdvertisementPromptConfigs;
+        promptConfigsUpdate['answer_exposure'] = answerExposurePromptConfigs;
+        promptConfigsUpdate['prohibited_words'] = prohibitedWords;
+        
+        const response = await fetch("http://localhost:8000/v1/api/prompt_configs", {
+            method: "POST", body: JSON.stringify(promptConfigsUpdate), headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (response.ok) {
+            console.log(await response.json());
+        }
         closeModal();
     };
 
