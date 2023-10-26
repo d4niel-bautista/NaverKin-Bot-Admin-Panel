@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -16,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -90,7 +90,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const Layout = () => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [toolbarLabel, setToolbarLabel] = useState("");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -103,12 +104,15 @@ const Layout = () => {
   const drawerItems = [{
     text: "Accounts",
     icon: <GroupIcon />,
+    path: '/accounts',
   }, {
     text: "Add Naver Account",
     icon: <PersonAddIcon />,
+    path: '/add_account',
   }, {
     text: "Question Answer Form",
     icon: <DescriptionIcon />,
+    path: '/question_answer_form',
   }];
 
   return (
@@ -129,7 +133,7 @@ const Layout = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            {toolbarLabel}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -142,11 +146,11 @@ const Layout = () => {
         <Divider />
         <List>
           {drawerItems.map((item) => {
-            const { text, icon } = item;
+            const { text, icon, path } = item;
             return (
               <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                <ListItemButton component={Link} to={path} onClick={() => {setToolbarLabel(text)}}>
+                  <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
