@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TableContainer,
     Table,
@@ -10,6 +10,7 @@ import {
     Button,
     Menu,
     MenuItem,
+    Typography,
 } from '@mui/material';
 import EditAccount from './EditAccount';
 
@@ -40,12 +41,12 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
         <TableRow key={account.username}>
             <TableCell style={contentCellStyle}>{account.username}</TableCell>
             <TableCell style={contentCellStyle}>{account.password}</TableCell>
-            <TableCell style={contentCellStyle}>{account.recoveryEmail}</TableCell>
+            <TableCell style={contentCellStyle}>{account.recovery_email}</TableCell>
             <TableCell style={contentCellStyle}>{account.name}</TableCell>
-            <TableCell style={contentCellStyle}>{account.dob}</TableCell>
+            <TableCell style={contentCellStyle}>{account.date_of_birth}</TableCell>
             <TableCell style={contentCellStyle}>{account.gender}</TableCell>
-            <TableCell style={contentCellStyle}>{account.mobileNo}</TableCell>
-            <TableCell style={contentCellStyle}>{account.profileUrl}</TableCell>
+            <TableCell style={contentCellStyle}>{account.mobile_no}</TableCell>
+            <TableCell style={contentCellStyle}>{account.account_url}</TableCell>
             <TableCell style={contentCellStyle}>
                 <Button
                     variant="contained"
@@ -67,9 +68,21 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
     );
 };
 
-const Accounts = ({ accounts }) => {
+const Accounts = () => {
     const [editModalOpen, setEditModalOpen] = useState(false); // State to control the edit modal
     const [editedAccount, setEditedAccount] = useState({}); // State to store edited account data
+    const [accounts, setAccounts] = useState([]);
+
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            const response = await fetch("http://localhost:8000/v1/api/accounts", { method: "GET" });
+            if (response.ok) {
+                const data = await response.json();
+                setAccounts(data);
+            }
+        }
+        fetchAccounts();
+    }, []);
 
     const handleEditAccount = (account) => {
         setEditedAccount(account);
@@ -105,13 +118,22 @@ const Accounts = ({ accounts }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {accounts.map((account) => (
-                            <TableRowComponent
-                                key={account.username}
-                                account={account}
-                                handleEditAccount={handleEditAccount}
-                            />
-                        ))}
+                        {accounts.length ?
+                            accounts.map((account) => {
+                                return (
+                                    <TableRowComponent
+                                        key={account.username}
+                                        account={account}
+                                        handleEditAccount={handleEditAccount}
+                                    />
+                                );
+                            }) :
+                            <TableRow>
+                                <TableCell colSpan={9}>
+                                    <Typography textAlign={'center'} fontStyle={'italic'}>No available accounts.</Typography>
+                                </TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
