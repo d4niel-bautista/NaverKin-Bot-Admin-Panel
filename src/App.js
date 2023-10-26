@@ -2,6 +2,8 @@ import QuestionAnswerForm from "./components/QuestionAnswerForm/QuestionAnswerFo
 import AccountsTable from "./components/Accounts/AccountsTable";
 import LoginForm from "./components/Login/LoginForm";
 import AddAccount from "./components/Accounts/AddAccount";
+import Layout from "./components/MainApp/Layout";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const exampleAccounts = [
   {
@@ -107,13 +109,35 @@ const exampleAccounts = [
   // Add 10 more account objects as needed
 ];
 
-function App() {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/accounts",
+        element: <AccountsTable accounts={exampleAccounts}/>,
+      },
+      {
+        path: "/add_account",
+        element: <AddAccount />,
+      },
+      {
+        path: "/question_answer_form",
+        element: <QuestionAnswerForm />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginForm />,
+  }
+]);
+
+const App = () => {
   return (
     <div className="App">
-      <AddAccount />
-      <QuestionAnswerForm />
-      <AccountsTable accounts={exampleAccounts}/>
-      <LoginForm />
+      <RouterProvider router={router} />
     </div>
   );
 }
