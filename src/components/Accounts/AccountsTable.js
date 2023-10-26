@@ -37,6 +37,11 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
         setAnchorEl(null);
     };
 
+    const editAccount = () => {
+        handleCloseMenu();
+        handleEditAccount(account);
+    };
+
     return (
         <TableRow key={account.username}>
             <TableCell style={contentCellStyle}>{account.username}</TableCell>
@@ -60,7 +65,7 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
                     open={Boolean(anchorEl)}
                     onClose={handleCloseMenu}
                 >
-                    <MenuItem onClick={() => handleEditAccount(account)}>Edit</MenuItem>
+                    <MenuItem onClick={editAccount}>Edit</MenuItem>
                     <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
                 </Menu>
             </TableCell>
