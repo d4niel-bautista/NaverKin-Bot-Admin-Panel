@@ -43,7 +43,7 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
     };
 
     return (
-        <TableRow key={account.username}>
+        <TableRow key={account.id}>
             <TableCell style={contentCellStyle}>{account.username}</TableCell>
             <TableCell style={contentCellStyle}>{account.password}</TableCell>
             <TableCell style={contentCellStyle}>{account.recovery_email}</TableCell>
@@ -75,7 +75,7 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
 
 const Accounts = () => {
     const [editModalOpen, setEditModalOpen] = useState(false); // State to control the edit modal
-    const [editedAccount, setEditedAccount] = useState({}); // State to store edited account data
+    const [editAccount, setEditAccount] = useState({}); // State to store edited account data
     const [accounts, setAccounts] = useState([]);
 
     useEffect(() => {
@@ -90,19 +90,12 @@ const Accounts = () => {
     }, []);
 
     const handleEditAccount = (account) => {
-        setEditedAccount(account);
+        setEditAccount(account);
         setEditModalOpen(true);
     };
 
     const handleCloseEditModal = () => {
         setEditModalOpen(false);
-    };
-
-    const handleSaveEdit = (editedData) => {
-        // Handle saving the edited account data here
-        // You can update the account data in your accounts array or send it to a server API
-        // For this example, we'll simply close the modal
-        handleCloseEditModal();
     };
 
     return (
@@ -127,7 +120,6 @@ const Accounts = () => {
                             accounts.map((account) => {
                                 return (
                                     <TableRowComponent
-                                        key={account.username}
                                         account={account}
                                         handleEditAccount={handleEditAccount}
                                     />
@@ -146,8 +138,8 @@ const Accounts = () => {
                 <EditAccount
                     open={editModalOpen}
                     onClose={handleCloseEditModal}
-                    account={editedAccount}
-                    onSave={handleSaveEdit}
+                    account={editAccount}
+                    setAccounts={setAccounts}
                 />
             )}
         </div>
