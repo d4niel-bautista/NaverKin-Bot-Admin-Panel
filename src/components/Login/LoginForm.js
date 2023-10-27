@@ -10,14 +10,14 @@ import {
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import './LoginForm.css'; // Import a CSS file for custom styles
+import './LoginForm.css';
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     });
-    const [message, setMessage] = useState(''); // State for message message
+    const [message, setMessage] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,13 +29,16 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const response = await fetch("http://localhost:8000/v1/api/token", {
+            method: "POST",
+            body: JSON.stringify(`grant_type=&username=${formData.username}&password=${formData.password}&client_id=&client_secret=`),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        });
 
-        const response = await fetch("http://localhost:8000/login", {method: "POST", body: JSON.stringify(formData), headers: {
-            "Content-Type": "application/json",}});
-        // const response = await fetch("http://localhost:8000/", {method: "GET"});
         console.log(await response.json());
         if (response.ok) {
-            // Successful login
             setMessage((
                 <div className="success">
                     <CheckCircleIcon className="success-icon" />
@@ -45,10 +48,9 @@ const LoginForm = () => {
                 </div>
             ));
         } else {
-            // Wrong login
             setMessage((
                 <div className="error">
-                    <ErrorIcon className="error-icon" /> {/* Use the ErrorOutlineRoundedIcon icon */}
+                    <ErrorIcon className="error-icon" />
                     <Typography variant="body1" color="error" className="error-text">
                         Invalid username or password
                     </Typography>
@@ -65,7 +67,7 @@ const LoginForm = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '85vh', // Set the minimum height to 60% of the viewport height
+                minHeight: '85vh',
             }}
         >
             <Paper elevation={3} style={{ padding: '20px', width: '100%' }}>
