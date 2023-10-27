@@ -4,13 +4,16 @@ import LoginForm from "./components/Login/LoginForm";
 import AddAccount from "./components/Accounts/AddAccount";
 import Layout from "./components/MainApp/Layout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import PrivateRoutes from "./routes/PrivateRoutes";
+import { AuthProvider } from "./context/AuthProvider";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
+    element: <PrivateRoutes />,
+    children: [{
+      element: <Layout />,
+      path: "/",
+      children: [{
         path: "/accounts",
         element: <AccountsTable />,
       },
@@ -21,8 +24,8 @@ const router = createBrowserRouter([
       {
         path: "/question_answer_form",
         element: <QuestionAnswerForm />,
-      },
-    ],
+      }]
+    }],
   },
   {
     path: "/login",
@@ -33,9 +36,11 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </div>
   );
-}
+};
 
 export default App;
