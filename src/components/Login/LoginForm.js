@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -9,10 +9,20 @@ import {
 } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
 import './LoginForm.css';
+import { AuthContext } from '../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
+    const [token, setToken] = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+            navigate("/");
+        }
+    });
+
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -37,7 +47,7 @@ const LoginForm = () => {
             }
         });
 
-        console.log(await response.json());
+        const data = await response.json();
         if (response.ok) {
             setMessage((
                 <div className="success">
@@ -47,6 +57,8 @@ const LoginForm = () => {
                     </Typography>
                 </div>
             ));
+            setToken(data['access_token']);
+            navigate("/");
         } else {
             setMessage((
                 <div className="error">
