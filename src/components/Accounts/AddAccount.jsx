@@ -10,6 +10,7 @@ import {
     FormControlLabel,
     Checkbox,
 } from '@mui/material';
+import { useOutletContext } from 'react-router-dom';
 const moment = require('moment');
 
 const AddAccount = () => {
@@ -25,10 +26,11 @@ const AddAccount = () => {
         mobile_no: '',
         status: 0,
     });
+    const [token] = useOutletContext();
 
     const handleChange = (e) => {
         let { name, value, type, checked } = e.target;
-        if (type === 'checkbox'){
+        if (type === 'checkbox') {
             value = checked ? 1 : 0;
         }
         setFormData({
@@ -42,11 +44,17 @@ const AddAccount = () => {
         const currentDate = moment().format('YYYY-MM-DD');
         formData.date_of_birth = formData.date_of_birth === "" ? formData.date_of_birth = currentDate : formData.date_of_birth;
 
-        const response = await fetch("http://localhost:8000/v1/api/add_account", {method: "POST", body: JSON.stringify(formData), headers: {
-            "Content-Type": "application/json",}});
-        console.log(await response.json());
+        const response = await fetch("http://localhost:8000/v1/api/add_account", {
+            method: "POST", body: JSON.stringify(formData),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+
         if (response.ok) {
-            console.log(formData);
+            const data = await response.json();
+            console.log(data);
         }
     };
 
@@ -155,10 +163,10 @@ const AddAccount = () => {
                                 name='gender'
                                 value={formData.gender}
                                 onChange={handleChange}
-                                >
-                                    <MenuItem value="male">Male</MenuItem>
-                                    <MenuItem value="female">Female</MenuItem>
-                                    <MenuItem value="other">Other</MenuItem>
+                            >
+                                <MenuItem value="male">Male</MenuItem>
+                                <MenuItem value="female">Female</MenuItem>
+                                <MenuItem value="other">Other</MenuItem>
                             </TextField>
                         </Grid>
                         <Grid item xs={12}>

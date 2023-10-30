@@ -16,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -92,6 +92,7 @@ const Layout = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [toolbarLabel, setToolbarLabel] = useState("");
+  const [token, setToken] = useOutletContext();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -168,7 +169,7 @@ const Layout = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet />
+        <Outlet context={[token, setToken]}/>
       </Box>
     </Box>
   );

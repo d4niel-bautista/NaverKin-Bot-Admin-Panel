@@ -4,6 +4,7 @@ import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 import EditPromptConfigs from './EditPromptConfigs';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { useOutletContext } from 'react-router-dom';
 
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
@@ -12,6 +13,7 @@ const QuestionAnswerForm = () => {
     const [answer2Text, setAnswer2Text] = useState({ 'content': '', 'postscript': '' });
     const [loadingState, setLoadingState] = useState(false);
     const [promptConfigsOpen, setPromptConfigsOpen] = useState(false);
+    const [token] = useOutletContext();
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -35,7 +37,14 @@ const QuestionAnswerForm = () => {
 
     const generateContent = async () => {
         setLoadingState(true);
-        const response = await fetch("http://localhost:8000/v1/api/generate_form_content", { method: "GET" });
+        const response = await fetch("http://localhost:8000/v1/api/generate_form_content", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+
         if (response.ok) {
             const data = await response.json();
             setQuestionText(data['question']);
@@ -67,8 +76,10 @@ const QuestionAnswerForm = () => {
         }
 
         const response = await fetch("http://localhost:8000/v1/api/question_answer", {
-            method: "POST", body: JSON.stringify(questionForm), headers: {
+            method: "POST", body: JSON.stringify(questionForm),
+            headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
             }
         });
 
@@ -157,7 +168,7 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} />)}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} token={token} />)}
         </>
     );
 };

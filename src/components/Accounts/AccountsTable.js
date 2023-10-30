@@ -13,6 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import EditAccount from './EditAccount';
+import { useOutletContext } from 'react-router-dom';
 
 const headerCellStyle = {
     backgroundColor: '#333',
@@ -77,10 +78,18 @@ const Accounts = () => {
     const [editModalOpen, setEditModalOpen] = useState(false); // State to control the edit modal
     const [editAccount, setEditAccount] = useState({}); // State to store edited account data
     const [accounts, setAccounts] = useState([]);
+    const [token] = useOutletContext();
 
     useEffect(() => {
         const fetchAccounts = async () => {
-            const response = await fetch("http://localhost:8000/v1/api/accounts", { method: "GET" });
+            const response = await fetch("http://localhost:8000/v1/api/accounts", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                }
+            });
+
             if (response.ok) {
                 const data = await response.json();
                 setAccounts(data);
@@ -120,6 +129,7 @@ const Accounts = () => {
                             accounts.map((account) => {
                                 return (
                                     <TableRowComponent
+                                        key={account.id}
                                         account={account}
                                         handleEditAccount={handleEditAccount}
                                     />
@@ -140,6 +150,7 @@ const Accounts = () => {
                     onClose={handleCloseEditModal}
                     account={editAccount}
                     setAccounts={setAccounts}
+                    token={token}
                 />
             )}
         </div>

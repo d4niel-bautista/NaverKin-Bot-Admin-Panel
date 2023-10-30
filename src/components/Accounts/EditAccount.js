@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import AccountDetails from './AccountDetails';
 
-const EditAccount = ({ open, onClose, account, setAccounts }) => {
+const EditAccount = ({ open, onClose, account, setAccounts, token }) => {
   const [editAccount, setEditAccount] = useState(account);
 
   const handleFieldChange = (field, value) => {
@@ -21,8 +21,10 @@ const EditAccount = ({ open, onClose, account, setAccounts }) => {
       method: "PATCH", body: JSON.stringify(editAccount),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
       }
     });
+
     if (response.ok) {
       const data = await response.json();
       setAccounts(accounts => {

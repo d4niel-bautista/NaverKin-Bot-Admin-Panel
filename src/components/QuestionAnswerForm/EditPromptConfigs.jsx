@@ -52,7 +52,7 @@ const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     );
 }
 
-const EditPromptConfigs = ({ closeModal, isModalOpen }) => {
+const EditPromptConfigs = ({ closeModal, isModalOpen, token }) => {
     const [questionPromptConfigs, setQuestionPromptConfigs] = useState({ 'query': '', 'prompt': '' });
     const [answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs] = useState({ 'query': '', 'prompt': '' });
     const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
@@ -60,13 +60,19 @@ const EditPromptConfigs = ({ closeModal, isModalOpen }) => {
 
     useEffect(() => {
         const getPromptConfigs = async () => {
-            const response = await fetch("http://localhost:8000/v1/api/prompt_configs", { method: "GET" });
+            const response = await fetch("http://localhost:8000/v1/api/prompt_configs", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                }
+            });
 
             if (response.ok) {
                 const data = await response.json();
-                setQuestionPromptConfigs({'query': data['question']['query'], 'prompt': data['question']['prompt']});
-                setAnswerAdvertisementPromptConfigs({'query': data['answer_advertisement']['query'], 'prompt': data['answer_advertisement']['prompt']});
-                setAnswerExposurePromptConfigs({'query': data['answer_exposure']['query'], 'prompt': data['answer_exposure']['prompt']});
+                setQuestionPromptConfigs({ 'query': data['question']['query'], 'prompt': data['question']['prompt'] });
+                setAnswerAdvertisementPromptConfigs({ 'query': data['answer_advertisement']['query'], 'prompt': data['answer_advertisement']['prompt'] });
+                setAnswerExposurePromptConfigs({ 'query': data['answer_exposure']['query'], 'prompt': data['answer_exposure']['prompt'] });
                 setProhibitedWords(data['prohibited_words']);
             }
         }
@@ -80,10 +86,12 @@ const EditPromptConfigs = ({ closeModal, isModalOpen }) => {
         promptConfigsUpdate['answer_advertisement'] = answerAdvertisementPromptConfigs;
         promptConfigsUpdate['answer_exposure'] = answerExposurePromptConfigs;
         promptConfigsUpdate['prohibited_words'] = prohibitedWords;
-        
+
         const response = await fetch("http://localhost:8000/v1/api/prompt_configs", {
-            method: "POST", body: JSON.stringify(promptConfigsUpdate), headers: {
+            method: "POST", body: JSON.stringify(promptConfigsUpdate),
+            headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
             }
         });
 
