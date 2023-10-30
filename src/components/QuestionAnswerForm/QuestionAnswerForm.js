@@ -103,10 +103,9 @@ const QuestionAnswerForm = () => {
                 flexDirection="column"
                 alignItems="center"
                 justifyContent="center"
-                height="100vh"
             >
                 <Card variant="outlined" sx={{ width: '50%', boxShadow: 3 }}>
-                    <CardContent sx={{ maxHeight: '85vh', overflowY: 'auto' }}>
+                    <CardContent>
                         <Grid container spacing={2} paddingTop={"24px"} paddingX={"16px"}
                             alignItems={"center"}>
                             <Grid item xs={6} textAlign="left">
