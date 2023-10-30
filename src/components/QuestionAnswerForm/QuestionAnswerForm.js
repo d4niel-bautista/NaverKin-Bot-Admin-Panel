@@ -92,7 +92,7 @@ const QuestionAnswerForm = () => {
                     <CardContent sx={{ maxHeight: '85vh', overflowY: 'auto' }}>
                         <Grid container spacing={2} paddingTop={"24px"} paddingX={"16px"}
                             alignItems={"center"}>
-                            <Grid xs={6} textAlign="left">
+                            <Grid item xs={6} textAlign="left">
                                 <TextField
                                     id="form_type"
                                     select
@@ -107,14 +107,14 @@ const QuestionAnswerForm = () => {
                                     <MenuItem value="1:2">1 Question, 2 Answers(Exposure & Advertisement)</MenuItem>
                                 </TextField>
                             </Grid>
-                            <Grid xs={5} textAlign="right">
+                            <Grid item xs={5} textAlign="right">
                                 <Button variant="contained" color="primary"
                                     onClick={generateContent}
                                     disabled={loadingState}>
                                     Generate Content
                                 </Button>
                             </Grid>
-                            <Grid xs={1} textAlign="center">
+                            <Grid item xs={1} textAlign="center">
                                 <IconButton onClick={openPromptConfigs}
                                     disabled={loadingState}>
                                     <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
@@ -157,7 +157,7 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs openModal={openPromptConfigs} closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} />)}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} />)}
         </>
     );
 };
