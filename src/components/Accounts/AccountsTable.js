@@ -15,6 +15,7 @@ import {
 import EditAccount from './EditAccount';
 import { useOutletContext } from 'react-router-dom';
 import AlertDialog from '../Alerts/AlertDialog';
+import AlertMessage from '../Alerts/AlertMessage';
 
 const headerCellStyle = {
     backgroundColor: '#333',
@@ -87,6 +88,12 @@ const Accounts = () => {
     const [accounts, setAccounts] = useState([]);
     const [deleteDialog, setDeleteDialog] = useState({ open: false, title: "Delete Account", description: "" })
     const [token] = useOutletContext();
+    const [alertMessage, setAlertMessage] = useState({
+        open: false,
+        severity: "",
+        title: "",
+        description: ""
+    });
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -128,17 +135,44 @@ const Accounts = () => {
 
     const handleDeleteAccount = async (e) => {
         e.preventDefault();
+        if (deleteAccount.current.id === 0 && deleteAccount.current.username === "") {
+            return;
+        }
         setDeleteDialog((deleteDialog) => (
             {
                 ...deleteDialog,
                 open: false,
             }
         ));
-        console.log(deleteAccount.current.username);
+        const response = await fetch("http://localhost:8000/v1/api/delete_account", {
+            method: "DELETE",
+            body: JSON.stringify(deleteAccount.current),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+        if (response.ok) {
+            setAlertMessage({ open: true, severity: "success", title: "Account Deleted", description: `Account "${deleteAccount.current.username}" has been deleted` })
+            setAccounts(accounts => {
+                const deletedAccountIndex = accounts.findIndex(account => account.id === deleteAccount.current.id);
+                if (deletedAccountIndex !== -1) {
+                    const updatedAccounts = [...accounts];
+                    updatedAccounts.splice(deletedAccountIndex, 1);
+                    return updatedAccounts;
+                }
+                return accounts;
+            });
+        } else if (response.status === 404) {
+            setAlertMessage({ open: true, severity: "error", title: "Failed", description: `Account "${deleteAccount.current.username}" does not exist!` })
+        } else {
+            setAlertMessage({ open: true, severity: "error", title: `ERROR ${response.status}`, description: `There's problem with the server` })
+        }
     }
 
     return (
-        <div>
+        <>
+            <AlertMessage alertMessage={alertMessage} setAlertMessage={setAlertMessage} />
             <TableContainer component={Paper}>
                 <Table aria-label="Account table">
                     <TableHead>
@@ -188,7 +222,7 @@ const Accounts = () => {
                 alertDialog={deleteDialog}
                 handleClose={() => setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }))}
                 handleConfirm={handleDeleteAccount} />
-        </div>
+        </>
     );
 };
 

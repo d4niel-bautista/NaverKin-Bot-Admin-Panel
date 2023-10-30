@@ -6,7 +6,7 @@ const AlertMessage = ({ alertMessage, setAlertMessage }) => {
     return (
         <Collapse in={alertMessage["open"]}>
             <Alert
-                severity={alertMessage.severity}
+                severity={alertMessage.severity ? alertMessage.severity : "info"}
                 action={
                     <IconButton
                         color="inherit"
