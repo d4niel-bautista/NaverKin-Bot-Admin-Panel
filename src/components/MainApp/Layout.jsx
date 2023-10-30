@@ -20,6 +20,8 @@ import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Button } from '@mui/material';
 
 const drawerWidth = 260;
 
@@ -101,7 +103,7 @@ const Layout = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+
   const drawerItems = useRef([{
     text: "Accounts",
     icon: <GroupIcon />,
@@ -118,10 +120,10 @@ const Layout = () => {
 
   let location = useLocation();
   useEffect(() => {
-      const result = drawerItems.current.find(item => item.path === location.pathname)
-      if (result){
-        setToolbarLabel(result.text);
-      }
+    const result = drawerItems.current.find(item => item.path === location.pathname)
+    if (result) {
+      setToolbarLabel(result.text);
+    }
   }, [location]);
 
   return (
@@ -144,6 +146,22 @@ const Layout = () => {
           <Typography variant="h6" noWrap component="div">
             {toolbarLabel}
           </Typography>
+          <Button
+            color="inherit"
+            aria-label="logout"
+            edge="end"
+            sx={{
+              marginLeft: 'auto',
+            }}
+            onClick={() => setToken(null)}
+          >
+            <Typography variant="caption" noWrap component="div"
+              sx={{ paddingRight: '10px' }}
+            >
+              LOGOUT
+            </Typography>
+            <LogoutIcon />
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -169,7 +187,7 @@ const Layout = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet context={[token, setToken]}/>
+        <Outlet context={[token, setToken]} />
       </Box>
     </Box>
   );
