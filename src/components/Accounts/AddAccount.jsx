@@ -11,6 +11,7 @@ import {
     Checkbox,
 } from '@mui/material';
 import { useOutletContext } from 'react-router-dom';
+import AlertMessage from '../Alerts/AlertMessage';
 const moment = require('moment');
 
 const AddAccount = () => {
@@ -25,6 +26,12 @@ const AddAccount = () => {
         gender: '',
         mobile_no: '',
         status: 0,
+    });
+    const [alertMessage, setAlertMessage] = useState({
+        open: false,
+        severity: "",
+        title: "",
+        description: ""
     });
     const [token] = useOutletContext();
 
@@ -53,8 +60,11 @@ const AddAccount = () => {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log(data);
+            setAlertMessage({ open: true, severity: "success", title: "User Added", description: `User "${formData.username}" is successfully saved` })
+        } else if (response.status === 403) {
+            setAlertMessage({ open: true, severity: "error", title: "Duplicate Entry", description: `User "${formData.username}" already exists!` })
+        } else {
+            setAlertMessage({ open: true, severity: "error", title: `ERROR ${response.status}`, description: `There's problem with the server` })
         }
     };
 
@@ -70,6 +80,7 @@ const AddAccount = () => {
             }}
         >
             <Paper elevation={3} style={{ padding: '20px', width: '100%' }}>
+                <AlertMessage alertMessage={alertMessage} setAlertMessage={setAlertMessage} />
                 <Typography variant="h5" gutterBottom>
                     Add Account
                 </Typography>
