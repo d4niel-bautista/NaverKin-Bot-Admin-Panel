@@ -5,7 +5,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 const PrivateRoutes = () => {
     const [token, setToken] = useContext(AuthContext);
     return (
-        token ? <Outlet context={[token, setToken]} /> : <Navigate to={"/login"} />
+        token && token.length > 50 ? <Outlet context={[token, setToken]} /> : <Navigate to={"/login"} />
     );
 };
 

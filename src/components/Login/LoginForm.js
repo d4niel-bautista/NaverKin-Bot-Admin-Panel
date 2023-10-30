@@ -18,9 +18,9 @@ const LoginForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (token) {
+        if (token && token.length > 50) {
             navigate("/");
-        }
+        };
     }, []);
 
     const [formData, setFormData] = useState({
