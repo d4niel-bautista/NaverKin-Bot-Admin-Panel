@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     TableContainer,
     Table,
@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import EditAccount from './EditAccount';
 import { useOutletContext } from 'react-router-dom';
+import AlertDialog from '../Alerts/AlertDialog';
 
 const headerCellStyle = {
     backgroundColor: '#333',
@@ -27,7 +28,7 @@ const contentCellStyle = {
 };
 
 // Create a separate TableRowComponent
-const TableRowComponent = ({ account, handleEditAccount }) => {
+const TableRowComponent = ({ account, handleEditAccount, handleDeleteDialog }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleOpenMenu = (event) => {
@@ -36,6 +37,11 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
 
     const handleCloseMenu = () => {
         setAnchorEl(null);
+    };
+
+    const handleDelete = () => {
+        handleCloseMenu();
+        handleDeleteDialog(account.id, account.username);
     };
 
     const editAccount = () => {
@@ -67,7 +73,7 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
                     onClose={handleCloseMenu}
                 >
                     <MenuItem onClick={editAccount}>Edit</MenuItem>
-                    <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
+                    <MenuItem onClick={handleDelete}>Delete</MenuItem>
                 </Menu>
             </TableCell>
         </TableRow>
@@ -77,7 +83,9 @@ const TableRowComponent = ({ account, handleEditAccount }) => {
 const Accounts = () => {
     const [editModalOpen, setEditModalOpen] = useState(false); // State to control the edit modal
     const [editAccount, setEditAccount] = useState({}); // State to store edited account data
+    const deleteAccount = useRef({ id: 0, username: "" });
     const [accounts, setAccounts] = useState([]);
+    const [deleteDialog, setDeleteDialog] = useState({ open: false, title: "Delete Account", description: "" })
     const [token] = useOutletContext();
 
     useEffect(() => {
@@ -107,6 +115,28 @@ const Accounts = () => {
         setEditModalOpen(false);
     };
 
+    const handleDeleteDialog = (id, username) => {
+        deleteAccount.current = { id, username };
+        setDeleteDialog((deleteDialog) => (
+            {
+                ...deleteDialog,
+                description: `Are you sure you want to delete "${username}" account?\nThis action is irreversible.`,
+                open: true,
+            }
+        ));
+    };
+
+    const handleDeleteAccount = async (e) => {
+        e.preventDefault();
+        setDeleteDialog((deleteDialog) => (
+            {
+                ...deleteDialog,
+                open: false,
+            }
+        ));
+        console.log(deleteAccount.current.username);
+    }
+
     return (
         <div>
             <TableContainer component={Paper}>
@@ -132,6 +162,7 @@ const Accounts = () => {
                                         key={account.id}
                                         account={account}
                                         handleEditAccount={handleEditAccount}
+                                        handleDeleteDialog={handleDeleteDialog}
                                     />
                                 );
                             }) :
@@ -153,6 +184,10 @@ const Accounts = () => {
                     token={token}
                 />
             )}
+            <AlertDialog
+                alertDialog={deleteDialog}
+                handleClose={() => setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }))}
+                handleConfirm={handleDeleteAccount} />
         </div>
     );
 };
