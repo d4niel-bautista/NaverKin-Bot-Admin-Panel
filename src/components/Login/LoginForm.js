@@ -21,7 +21,7 @@ const LoginForm = () => {
         if (token) {
             navigate("/");
         }
-    });
+    }, []);
 
     const [formData, setFormData] = useState({
         username: '',
