@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton, Backdrop, CircularProgress } from '@mui/material';
 import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 import EditPromptConfigs from './EditPromptConfigs';
@@ -92,6 +92,12 @@ const QuestionAnswerForm = () => {
 
     return (
         <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loadingState}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Box
                 display="flex"
                 flexDirection="column"

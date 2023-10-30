@@ -123,6 +123,8 @@ const Layout = () => {
     const result = drawerItems.current.find(item => item.path === location.pathname)
     if (result) {
       setToolbarLabel(result.text);
+    } else {
+      setToolbarLabel("Admin Panel");
     }
   }, [location]);
 
