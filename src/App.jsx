@@ -7,6 +7,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import { AuthProvider } from "./context/AuthProvider";
 
+const SERVER = process.env.REACT_APP_SERVER_API;
+
 const router = createBrowserRouter([
   {
     element: <PrivateRoutes />,
@@ -43,4 +45,5 @@ const App = () => {
   );
 };
 
+export { SERVER };
 export default App;

@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { SERVER } from "../App";
 
 export const AuthContext = createContext();
 
@@ -7,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const response = await fetch("/v1/api/is_authenticated", {
+            const response = await fetch(SERVER + "/is_authenticated", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

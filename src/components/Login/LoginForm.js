@@ -12,6 +12,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import './LoginForm.css';
 import { AuthContext } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { SERVER } from '../../App';
 
 const LoginForm = () => {
     const [token, setToken] = useContext(AuthContext);
@@ -39,7 +40,7 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:8000/v1/api/token", {
+        const response = await fetch(SERVER + "/token", {
             method: "POST",
             body: JSON.stringify(`grant_type=&username=${formData.username}&password=${formData.password}&client_id=&client_secret=`),
             headers: {

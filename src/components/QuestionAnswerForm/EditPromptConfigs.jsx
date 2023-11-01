@@ -12,6 +12,7 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { SERVER } from '../../App';
 
 const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     const onTextChange = (e) => {
@@ -60,7 +61,7 @@ const EditPromptConfigs = ({ closeModal, isModalOpen, token }) => {
 
     useEffect(() => {
         const getPromptConfigs = async () => {
-            const response = await fetch("http://localhost:8000/v1/api/prompt_configs", {
+            const response = await fetch(SERVER + "/prompt_configs", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,7 +88,7 @@ const EditPromptConfigs = ({ closeModal, isModalOpen, token }) => {
         promptConfigsUpdate['answer_exposure'] = answerExposurePromptConfigs;
         promptConfigsUpdate['prohibited_words'] = prohibitedWords;
 
-        const response = await fetch("http://localhost:8000/v1/api/prompt_configs", {
+        const response = await fetch(SERVER + "/prompt_configs", {
             method: "POST", body: JSON.stringify(promptConfigsUpdate),
             headers: {
                 "Content-Type": "application/json",

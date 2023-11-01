@@ -5,6 +5,7 @@ import AnswerArea from './AnswerArea';
 import EditPromptConfigs from './EditPromptConfigs';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useOutletContext } from 'react-router-dom';
+import { SERVER } from '../../App';
 
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
@@ -37,7 +38,7 @@ const QuestionAnswerForm = () => {
 
     const generateContent = async () => {
         setLoadingState(true);
-        const response = await fetch("http://localhost:8000/v1/api/generate_form_content", {
+        const response = await fetch(SERVER + "/generate_form_content", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -75,7 +76,7 @@ const QuestionAnswerForm = () => {
             questionForm['answer_exposure'] = answer2Text.postscript !== "" ? answer2Text.content + "\n\n" + answer2Text.postscript : answer2Text.content;
         }
 
-        const response = await fetch("http://localhost:8000/v1/api/question_answer", {
+        const response = await fetch(SERVER + "/question_answer", {
             method: "POST", body: JSON.stringify(questionForm),
             headers: {
                 "Content-Type": "application/json",

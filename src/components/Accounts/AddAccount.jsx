@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { useOutletContext } from 'react-router-dom';
 import AlertMessage from '../Alerts/AlertMessage';
+import { SERVER } from '../../App';
 const moment = require('moment');
 
 const AddAccount = () => {
@@ -51,7 +52,7 @@ const AddAccount = () => {
         const currentDate = moment().format('YYYY-MM-DD');
         formData.date_of_birth = formData.date_of_birth === "" ? formData.date_of_birth = currentDate : formData.date_of_birth;
 
-        const response = await fetch("http://localhost:8000/v1/api/add_account", {
+        const response = await fetch(SERVER + "/add_account", {
             method: "POST", body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",

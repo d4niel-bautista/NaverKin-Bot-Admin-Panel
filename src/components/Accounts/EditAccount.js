@@ -7,6 +7,7 @@ import {
   Button,
 } from '@mui/material';
 import AccountDetails from './AccountDetails';
+import { SERVER } from '../../App';
 
 const EditAccount = ({ open, onClose, account, setAccounts, token }) => {
   const [editAccount, setEditAccount] = useState(account);
@@ -17,7 +18,7 @@ const EditAccount = ({ open, onClose, account, setAccounts, token }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/v1/api/update_account", {
+    const response = await fetch(SERVER + "/update_account", {
       method: "PATCH", body: JSON.stringify(editAccount),
       headers: {
         "Content-Type": "application/json",

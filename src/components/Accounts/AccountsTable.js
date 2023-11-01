@@ -16,6 +16,7 @@ import EditAccount from './EditAccount';
 import { useOutletContext } from 'react-router-dom';
 import AlertDialog from '../Alerts/AlertDialog';
 import AlertMessage from '../Alerts/AlertMessage';
+import { SERVER } from '../../App';
 
 const headerCellStyle = {
     backgroundColor: '#333',
@@ -97,7 +98,7 @@ const Accounts = () => {
 
     useEffect(() => {
         const fetchAccounts = async () => {
-            const response = await fetch("http://localhost:8000/v1/api/accounts", {
+            const response = await fetch(SERVER + "/accounts", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -144,7 +145,7 @@ const Accounts = () => {
                 open: false,
             }
         ));
-        const response = await fetch("http://localhost:8000/v1/api/delete_account", {
+        const response = await fetch(SERVER + "/delete_account", {
             method: "DELETE",
             body: JSON.stringify(deleteAccount.current),
             headers: {
