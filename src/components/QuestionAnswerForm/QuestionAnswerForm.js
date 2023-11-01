@@ -6,6 +6,7 @@ import EditPromptConfigs from './EditPromptConfigs';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useOutletContext } from 'react-router-dom';
 import { SERVER } from '../../App';
+import AccountsSelection from './AccountsSelection';
 
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
@@ -14,6 +15,7 @@ const QuestionAnswerForm = () => {
     const [answer2Text, setAnswer2Text] = useState({ 'content': '', 'postscript': '' });
     const [loadingState, setLoadingState] = useState(false);
     const [promptConfigsOpen, setPromptConfigsOpen] = useState(false);
+    const [accountsSelection, setAccountsSelection] = useState(false);
     const [token] = useOutletContext();
 
     const handleTextChange = (field, text) => {
@@ -55,14 +57,6 @@ const QuestionAnswerForm = () => {
         setLoadingState(false);
     }
 
-    const openPromptConfigs = () => {
-        setPromptConfigsOpen(true);
-    }
-
-    const closePromptConfigs = () => {
-        setPromptConfigsOpen(false);
-    }
-
     const handleSubmit = async (e) => {
         setLoadingState(true);
         e.preventDefault();
@@ -76,17 +70,19 @@ const QuestionAnswerForm = () => {
             questionForm['answer_exposure'] = answer2Text.postscript !== "" ? answer2Text.content + "\n\n" + answer2Text.postscript : answer2Text.content;
         }
 
-        const response = await fetch(SERVER + "/question_answer", {
-            method: "POST", body: JSON.stringify(questionForm),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token,
-            }
-        });
+        setAccountsSelection(true);
 
-        if (response.ok) {
-            console.log(await response.json());
-        }
+        // const response = await fetch(SERVER + "/question_answer", {
+        //     method: "POST", body: JSON.stringify(questionForm),
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Authorization": "Bearer " + token,
+        //     }
+        // });
+
+        // if (response.ok) {
+        //     console.log(await response.json());
+        // }
 
         setLoadingState(false);
     };
@@ -132,7 +128,7 @@ const QuestionAnswerForm = () => {
                                 </Button>
                             </Grid>
                             <Grid item xs={1} textAlign="center">
-                                <IconButton onClick={openPromptConfigs}
+                                <IconButton onClick={() => setPromptConfigsOpen(true)}
                                     disabled={loadingState}>
                                     <SettingsOutlinedIcon sx={{ fontSize: 32 }} />
                                 </IconButton>
@@ -174,7 +170,8 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs closeModal={closePromptConfigs} isModalOpen={promptConfigsOpen} token={token} />)}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={()=> setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token} />)}
+            {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} />)}
         </>
     );
 };
