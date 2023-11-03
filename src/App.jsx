@@ -1,11 +1,11 @@
 import QuestionAnswerForm from "./components/QuestionAnswerForm/QuestionAnswerForm";
-import AccountsTable from "./components/Accounts/AccountsTable";
 import LoginForm from "./components/Login/LoginForm";
 import AddAccount from "./components/Accounts/AddAccount";
 import Layout from "./components/MainApp/Layout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import { AuthProvider } from "./context/AuthProvider";
+import AccountsDataGrid from "./components/Accounts/AccountsDataGrid";
 
 const SERVER = process.env.REACT_APP_SERVER_API;
 
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
       path: "/",
       children: [{
         path: "/accounts",
-        element: <AccountsTable />,
+        element: <AccountsDataGrid />,
       },
       {
         path: "/add_account",
