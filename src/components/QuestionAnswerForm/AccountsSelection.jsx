@@ -6,13 +6,13 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
     const [alert, setAlert] = useState({ severity: "", text: "" });
 
     return (
-        <Dialog open={open} maxWidth={formType === "1:1" ? "sm" : "md"} fullWidth>
+        <Dialog open={open} maxWidth="50%">
             <DialogTitle sx={{ fontWeight: 'bold' }}>
                 Accounts Selection
             </DialogTitle>
             <DialogContent>
                 <Alert
-                    severity={alert.text ? alert.text : "info"}
+                    severity={alert.severity ? alert.severity : "info"}
                     sx={{ marginBottom: '2em' }}
                 >
                     {alert.text}
