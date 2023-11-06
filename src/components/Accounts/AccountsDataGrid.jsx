@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { SERVER } from '../../App';
 import { useOutletContext } from 'react-router-dom';
 import { getObjectNewValues } from '../../utils/getObjectNewValues';
 import AlertSnackbar from '../Alerts/AlertSnackbar';
+import DataGridToolbar from './DataGridToolbar';
 const moment = require('moment');
 
 const categories = ['Test 1', 'Test 2', 'Test 3']
@@ -57,6 +58,8 @@ const columns = [
 
 const AccountsDataGrid = () => {
     const [accounts, setAccounts] = useState([]);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [selectedUsernames, setSelectedUsernames] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
         severity: "",
@@ -81,6 +84,15 @@ const AccountsDataGrid = () => {
         }
         fetchAccounts();
     }, []);
+
+    const handleRowSelectionModelChange = (newRowSelectionModel) => {
+        const selectedRows = newRowSelectionModel.map((id) => {
+            const account = accounts.find((account) => account.id === id);
+            return account ? account.username : '';
+        });
+        setSelectedUsernames(selectedRows.sort());
+        setRowSelectionModel(newRowSelectionModel);
+    }
 
     const onRowUpdate = async (updatedRow, originalRow) => {
         const newValues = getObjectNewValues(originalRow, updatedRow);
@@ -114,15 +126,19 @@ const AccountsDataGrid = () => {
                     '.MuiDataGrid-columnHeaders': {
                         backgroundColor: '#e7e5e1',
                     },
+                    '.MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold'
+                    },
                     maxHeight: '80vh',
                     maxWidth: '75vw',
                 }}
                 rows={accounts}
                 columns={columns}
-                slots={{ toolbar: GridToolbar }}
+                slots={{ toolbar: DataGridToolbar }}
                 slotProps={{
                     toolbar: {
-                        showQuickFilter: true,
+                        rowSelectionModel,
+                        selectedUsernames
                     },
                 }}
                 initialState={{
@@ -133,6 +149,8 @@ const AccountsDataGrid = () => {
                 pageSizeOptions={[5, 10, 20]}
                 checkboxSelection
                 disableRowSelectionOnClick
+                rowSelectionModel={rowSelectionModel}
+                onRowSelectionModelChange={handleRowSelectionModelChange}
                 processRowUpdate={onRowUpdate}
                 onProcessRowUpdateError={(error) => console.log(error)}
             />
