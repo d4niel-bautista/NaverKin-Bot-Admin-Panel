@@ -3,7 +3,7 @@ import { GridToolbarContainer, GridToolbarQuickFilter, GridToolbarExport } from 
 import React from 'react';
 import DeleteToolbarComponent from './DeleteToolbarComponent';
 
-const DataGridToolbar = ({ rowSelectionModel, selectedUsernames }) => {
+const DataGridToolbar = (props) => {
     return (
         <GridToolbarContainer>
             <Grid container columnSpacing={12} rowSpacing={2}>
@@ -11,7 +11,13 @@ const DataGridToolbar = ({ rowSelectionModel, selectedUsernames }) => {
                     <GridToolbarExport printOptions={{ disableToolbarButton: true }} sx={{ fontWeight: 'bold' }} />
                 </Grid>
                 <Grid item xs={1}>
-                    <DeleteToolbarComponent selectedRows={rowSelectionModel} usernames={selectedUsernames} />
+                    <DeleteToolbarComponent
+                        selectedRows={props.rowSelectionModel}
+                        usernames={props.selectedUsernames}
+                        accounts={props.accounts}
+                        setAccounts={props.setAccounts}
+                        setSnackbar={props.setSnackbar}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <GridToolbarQuickFilter sx={{ marginLeft: 'auto' }} />

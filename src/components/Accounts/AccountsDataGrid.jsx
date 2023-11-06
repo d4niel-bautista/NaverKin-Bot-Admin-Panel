@@ -138,7 +138,10 @@ const AccountsDataGrid = () => {
                 slotProps={{
                     toolbar: {
                         rowSelectionModel,
-                        selectedUsernames
+                        selectedUsernames,
+                        accounts,
+                        setAccounts,
+                        setSnackbar
                     },
                 }}
                 initialState={{
