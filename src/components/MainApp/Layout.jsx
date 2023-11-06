@@ -168,6 +168,9 @@ const Layout = () => {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <Typography variant='h6' marginRight={2}>
+            지식인 자동 답변
+          </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
