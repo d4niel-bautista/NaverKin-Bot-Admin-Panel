@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import AccountsSelectionDetails from './AccountsSelectionDetails';
 
 const AccountsSelection = ({ open, handleClose, formType }) => {
-    const [alert, setAlert] = useState({ severity: "", text: "" });
+    const [alert, setAlert] = useState({ display: 'none', severity: "", text: "" });
 
     return (
         <Dialog open={open} maxWidth="50%">
@@ -12,8 +12,8 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
             </DialogTitle>
             <DialogContent>
                 <Alert
-                    severity={alert.severity ? alert.severity : "info"}
-                    sx={{ marginBottom: '2em' }}
+                    severity={alert.severity !== "" ? alert.severity : "info"}
+                    sx={{ display: alert.display }}
                 >
                     {alert.text}
                 </Alert>
@@ -23,7 +23,10 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
                 <Button onClick={handleClose} color="secondary">
                     Cancel
                 </Button>
-                <Button color="primary">
+                <Button
+                    color="primary"
+                    disabled={alert.severity === "error" ? true : false}
+                >
                     Submit
                 </Button>
             </DialogActions>

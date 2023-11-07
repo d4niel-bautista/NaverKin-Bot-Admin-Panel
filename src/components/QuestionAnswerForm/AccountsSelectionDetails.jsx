@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthProvider';
 const AccountsSelectionDetails = ({ formType, setAlert }) => {
     const [interactions, setInteractions] = useState([]);
     const selectedAccounts = useRef({ 'question': 0, 'answer_advertisement': 0, 'answer_exposure': 0 });
-    const conflicts = useRef([]);
+    const conflicts = useRef({ 'answer_advertisement': '', 'answer_exposure': '' });
     const [token] = useContext(AuthContext);
 
     useEffect(() => {
@@ -28,10 +28,21 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
     }, []);
 
     const handleChange = (e) => {
-        selectedAccounts.current[e.target.name] = e.target.value;
         const account = interactions.find(account => account.id === e.target.value);
+        const isDuplicate = Object.values(selectedAccounts.current).includes(e.target.value);
+        selectedAccounts.current[e.target.name] = e.target.value;
+        const findOtherDuplicates = Object.values(selectedAccounts.current).filter((item, index) => Object.values(selectedAccounts.current).indexOf(item) !== index)
 
-        if (e.target.value === 0) { return; }
+        if (findOtherDuplicates.length === 0 || findOtherDuplicates[0] === 0) {
+            setAlert({ 'display': 'none', 'severity': '', 'text': '' });
+        }
+
+        if (e.target.value === 0) {
+            return;
+        } else if (isDuplicate) {
+            setAlert({ 'display': 'flex', 'severity': 'error', 'text': `The account ${account.username} is duplicate!` });
+            return;
+        }
 
         if (e.target.name === "question") {
             const otherAccounts = { ...selectedAccounts.current };
@@ -41,7 +52,11 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
                     const otherAccount = interactions.find(account => account.id === value);
                     const regex = new RegExp(account.username, 'g');
                     const interactionsCount = otherAccount.interactions.match(regex);
-                    console.log(`${key}: ${interactionsCount ? interactionsCount.length : 0}`);
+                    if (interactionsCount && interactionsCount.length >= 1) {
+                        const conflict = `There ${interactionsCount.length > 1 ? "are" : "is"} ${interactionsCount.length} interactions between ${account.username} and ${otherAccount.username}.`;
+                        conflicts.current[key] = conflict;
+                        // setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflicts.current.join("\n") });
+                    }
                 }
             }
         } else {
@@ -49,13 +64,19 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
                 const questionAccount = interactions.find(account => account.id === selectedAccounts.current.question);
                 const regex = new RegExp(questionAccount.username, 'g');
                 const interactionsCount = account.interactions.match(regex);
-                console.log(`${e.target.name}: ${interactionsCount ? interactionsCount.length : 0}`);
+                if (interactionsCount && interactionsCount.length >= 1) {
+                    const conflict = `There ${interactionsCount.length > 1 ? "are" : "is"} ${interactionsCount.length} interactions between ${questionAccount.username} and ${account.username}.`;
+                    if (Object.entries(conflicts.current).filter(([key, value]) => key !== e.target.name)[0][1] !== conflict) {
+                        conflicts.current[e.target.name] = conflict;
+                    }
+                    // setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflicts.current.join("\n") });
+                }
             }
         }
     };
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ marginTop: '2em' }}>
             {formType === "1:1" ?
                 <>
                     <Grid item sm={6} textAlign={'center'}>
