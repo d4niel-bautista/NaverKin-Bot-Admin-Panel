@@ -34,44 +34,53 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
         const findOtherDuplicates = Object.values(selectedAccounts.current).filter((item, index) => Object.values(selectedAccounts.current).indexOf(item) !== index)
 
         if (findOtherDuplicates.length === 0 || findOtherDuplicates[0] === 0) {
-            setAlert({ 'display': 'none', 'severity': '', 'text': '' });
-        }
-
-        if (e.target.value === 0) {
-            return;
+            if (Object.values(conflicts.current).every((value) => value === '')) {
+                setAlert({ 'display': 'none', 'severity': '', 'text': '' });
+            }
         } else if (isDuplicate) {
             setAlert({ 'display': 'flex', 'severity': 'error', 'text': `The account ${account.username} is duplicate!` });
             return;
+        } else {
+            return;
         }
 
-        if (e.target.name === "question") {
-            const otherAccounts = { ...selectedAccounts.current };
-            delete otherAccounts[e.target.name];
-            for (const [key, value] of Object.entries(otherAccounts)) {
-                if (value !== 0) {
-                    const otherAccount = interactions.find(account => account.id === value);
-                    const regex = new RegExp(account.username, 'g');
-                    const interactionsCount = otherAccount.interactions.match(regex);
-                    if (interactionsCount && interactionsCount.length >= 1) {
-                        const conflict = `There ${interactionsCount.length > 1 ? "are" : "is"} ${interactionsCount.length} interactions between ${account.username} and ${otherAccount.username}.`;
-                        conflicts.current[key] = conflict;
-                        // setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflicts.current.join("\n") });
-                    }
-                }
+        if (e.target.value === 0) {
+            if (e.target.name === 'question') {
+                setAlert({ 'display': 'none', 'severity': '', 'text': '' });
             }
-        } else {
-            if (selectedAccounts.current.question !== 0) {
-                const questionAccount = interactions.find(account => account.id === selectedAccounts.current.question);
+        }
+
+        if (selectedAccounts.current.question === 0) {
+            return;
+        }
+
+        const questionAccount = interactions.find(account => account.id === selectedAccounts.current.question);
+        const otherAccounts = { ...selectedAccounts.current };
+        delete otherAccounts["question"];
+
+        for (const [key, value] of Object.entries(otherAccounts)) {
+            if (value !== 0) {
+                const otherAccount = interactions.find(account => account.id === value);
                 const regex = new RegExp(questionAccount.username, 'g');
-                const interactionsCount = account.interactions.match(regex);
+                const interactionsCount = otherAccount.interactions.match(regex);
                 if (interactionsCount && interactionsCount.length >= 1) {
-                    const conflict = `There ${interactionsCount.length > 1 ? "are" : "is"} ${interactionsCount.length} interactions between ${questionAccount.username} and ${account.username}.`;
+                    const conflict = `There ${interactionsCount.length > 1 ? "are" : "is"} ${interactionsCount.length} interaction${interactionsCount.length > 1 ? "s" : ""} between ${questionAccount.username} and ${otherAccount.username}.`;
                     if (Object.entries(conflicts.current).filter(([key, value]) => key !== e.target.name)[0][1] !== conflict) {
-                        conflicts.current[e.target.name] = conflict;
+                        conflicts.current[key] = conflict;
                     }
-                    // setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflicts.current.join("\n") });
+                } else {
+                    conflicts.current[key] = '';
                 }
+            } else {
+                conflicts.current[key] = '';
             }
+        }
+
+        const conflictValues = Object.values(conflicts.current).filter(value => value !== '');
+        if (conflictValues.every((value) => value === '')) {
+            setAlert({ 'display': 'none', 'severity': '', 'text': '' });
+        } else {
+            setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflictValues.join("\n") });
         }
     };
 

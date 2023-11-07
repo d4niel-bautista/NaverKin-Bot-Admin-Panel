@@ -15,7 +15,12 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
                     severity={alert.severity !== "" ? alert.severity : "info"}
                     sx={{ display: alert.display }}
                 >
-                    {alert.text}
+                    {alert.text.split("\n").map((line, index) => (
+                        <span key={index}>
+                            {line}
+                            {index !== alert.text.split("\n").length - 1 && <br />}
+                        </span>
+                    ))}
                 </Alert>
                 <AccountsSelectionDetails formType={formType} setAlert={setAlert} />
             </DialogContent>
