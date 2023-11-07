@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { SERVER } from '../../App';
 import { AuthContext } from '../../context/AuthProvider';
 
-const AccountsSelectionDetails = ({ formType, setAlert }) => {
+const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }) => {
     const [interactions, setInteractions] = useState([]);
     const selectedAccounts = useRef({ 'question': 0, 'answer_advertisement': 0, 'answer_exposure': 0 });
     const conflicts = useRef({ 'answer_advertisement': '', 'answer_exposure': '' });
@@ -51,6 +51,7 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
         }
 
         if (selectedAccounts.current.question === 0) {
+            setDisableSubmitButton(true);
             return;
         }
 
@@ -81,6 +82,14 @@ const AccountsSelectionDetails = ({ formType, setAlert }) => {
             setAlert({ 'display': 'none', 'severity': '', 'text': '' });
         } else {
             setAlert({ 'display': 'flex', 'severity': 'warning', 'text': conflictValues.join("\n") });
+        }
+
+        if (formType === "1:2" && Object.values(selectedAccounts.current).some(id => id === 0)) {
+            setDisableSubmitButton(true);
+        } else if (formType === "1:1" && selectedAccounts.current.answer_advertisement === 0) {
+            setDisableSubmitButton(true);
+        } else {
+            setDisableSubmitButton(false);
         }
     };
 
