@@ -2,6 +2,7 @@ import { Grid, MenuItem, TextField } from '@mui/material'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { SERVER } from '../../App';
 import { AuthContext } from '../../context/AuthProvider';
+import CircleIcon from '@mui/icons-material/Circle';
 
 const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }) => {
     const [interactions, setInteractions] = useState([]);
@@ -109,7 +110,15 @@ const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }
                             <MenuItem key={0} value={0}>--</MenuItem>
                             {interactions && interactions.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.username}
+                                        {item.levelup_id === 1 &&
+                                            <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
+                                        }
+                                    </MenuItem>
                                 );
                             })
                             }
@@ -127,7 +136,15 @@ const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }
                             <MenuItem key={0} value={0}>--</MenuItem>
                             {interactions && interactions.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.username}
+                                        {item.levelup_id === 1 &&
+                                            <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
+                                        }
+                                    </MenuItem>
                                 );
                             })
                             }
@@ -147,7 +164,15 @@ const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }
                             <MenuItem key={0} value={0}>--</MenuItem>
                             {interactions && interactions.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.username}
+                                        {item.levelup_id === 1 &&
+                                            <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
+                                        }
+                                    </MenuItem>
                                 );
                             })
                             }
@@ -165,7 +190,15 @@ const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }
                             <MenuItem key={0} value={0}>--</MenuItem>
                             {interactions && interactions.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.username}
+                                        {item.levelup_id === 1 &&
+                                            <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
+                                        }
+                                    </MenuItem>
                                 );
                             })
                             }
@@ -183,7 +216,15 @@ const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }
                             <MenuItem key={0} value={0}>--</MenuItem>
                             {interactions && interactions.map((item) => {
                                 return (
-                                    <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.username}
+                                        {item.levelup_id === 1 &&
+                                            <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
+                                        }
+                                    </MenuItem>
                                 );
                             })
                             }
