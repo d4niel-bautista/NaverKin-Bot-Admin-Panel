@@ -4,9 +4,8 @@ import { SERVER } from '../../App';
 import { AuthContext } from '../../context/AuthProvider';
 import CircleIcon from '@mui/icons-material/Circle';
 
-const AccountsSelectionDetails = ({ formType, setAlert, setDisableSubmitButton }) => {
+const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDisableSubmitButton }) => {
     const [interactions, setInteractions] = useState([]);
-    const selectedAccounts = useRef({ 'question': 0, 'answer_advertisement': 0, 'answer_exposure': 0 });
     const conflicts = useRef({ 'answer_advertisement': '', 'answer_exposure': '' });
     const [token] = useContext(AuthContext);
 

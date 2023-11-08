@@ -1,10 +1,16 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import AccountsSelectionDetails from './AccountsSelectionDetails';
 
-const AccountsSelection = ({ open, handleClose, formType }) => {
+const AccountsSelection = ({ open, handleClose, formType, handleSubmit }) => {
     const [alert, setAlert] = useState({ display: 'none', severity: "", text: "" });
+    const selectedAccounts = useRef({ 'question': 0, 'answer_advertisement': 0, 'answer_exposure': 0 });
     const [disableSubmitButton, setDisableSubmitButton] = useState(true);
+
+    const onSubmit = (e) => {
+        handleClose();
+        handleSubmit(e, selectedAccounts.current);
+    };
 
     return (
         <Dialog open={open} maxWidth="50%">
@@ -23,7 +29,7 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
                         </span>
                     ))}
                 </Alert>
-                <AccountsSelectionDetails formType={formType} setAlert={setAlert} setDisableSubmitButton={setDisableSubmitButton} />
+                <AccountsSelectionDetails selectedAccounts={selectedAccounts} formType={formType} setAlert={setAlert} setDisableSubmitButton={setDisableSubmitButton} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="secondary">
@@ -32,6 +38,7 @@ const AccountsSelection = ({ open, handleClose, formType }) => {
                 <Button
                     color="primary"
                     disabled={alert.severity === "error" || disableSubmitButton ? true : false}
+                    onClick={onSubmit}
                 >
                     Submit
                 </Button>

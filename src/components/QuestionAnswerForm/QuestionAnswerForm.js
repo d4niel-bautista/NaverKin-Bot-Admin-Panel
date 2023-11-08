@@ -57,32 +57,35 @@ const QuestionAnswerForm = () => {
         setLoadingState(false);
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, selectedAccounts) => {
         setLoadingState(true);
         e.preventDefault();
 
-        let questionForm = {}
-        questionForm['question'] = questionText;
+        let questionForm = { 'question': {}, 'answer_advertisement': {} }
+        questionForm['question']['content'] = questionText;
+        questionForm['question']['id'] = selectedAccounts.question;
         if (formType === "1:1") {
-            questionForm['answer'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
+            questionForm['answer_advertisement']['content'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
+            questionForm['answer_advertisement']['id'] = selectedAccounts.answer_advertisement;
         } else if ((formType === "1:2")) {
-            questionForm['answer_advertisement'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
-            questionForm['answer_exposure'] = answer2Text.postscript !== "" ? answer2Text.content + "\n\n" + answer2Text.postscript : answer2Text.content;
+            questionForm['answer_advertisement']['content'] = answer1Text.postscript !== "" ? answer1Text.content + "\n\n" + answer1Text.postscript : answer1Text.content;
+            questionForm['answer_advertisement']['id'] = selectedAccounts.answer_advertisement;
+            questionForm['answer_exposure'] = {};
+            questionForm['answer_exposure']['content'] = answer2Text.postscript !== "" ? answer2Text.content + "\n\n" + answer2Text.postscript : answer2Text.content;
+            questionForm['answer_exposure']['id'] = selectedAccounts.answer_exposure;
         }
 
-        setAccountsSelection(true);
+        const response = await fetch(SERVER + "/question_answer", {
+            method: "POST", body: JSON.stringify(questionForm),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
 
-        // const response = await fetch(SERVER + "/question_answer", {
-        //     method: "POST", body: JSON.stringify(questionForm),
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Authorization": "Bearer " + token,
-        //     }
-        // });
-
-        // if (response.ok) {
-        //     console.log(await response.json());
-        // }
+        if (response.ok) {
+            console.log(await response.json());
+        }
 
         setLoadingState(false);
     };
@@ -162,7 +165,7 @@ const QuestionAnswerForm = () => {
                         <Divider sx={{ my: 2 }} />
                         <Box display="flex" justifyContent="center">
                             <Button variant="contained" color="primary" sx={{ mt: 3, fontSize: '1.5rem' }}
-                                onClick={handleSubmit}
+                                onClick={() => setAccountsSelection(true)}
                                 disabled={loadingState}>
                                 Submit
                             </Button>
@@ -170,8 +173,8 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs closeModal={()=> setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token} />)}
-            {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} />)}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={() => setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token} />)}
+            {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} handleSubmit={handleSubmit} />)}
         </>
     );
 };
