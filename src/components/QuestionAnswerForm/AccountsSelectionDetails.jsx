@@ -77,6 +77,14 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
             }
         }
 
+        if (formType === "1:2" && selectedAccounts.current['answer_exposure'] > 0) {
+            const answer_exposure = interactions.find(account => account.id === selectedAccounts.current['answer_exposure'])
+            if (answer_exposure.levelup_id === 0) {
+                const addNewLine = conflicts.current['answer_exposure'] !== '' ? '\n' : '';
+                conflicts.current['answer_exposure'] += `${addNewLine}Account ${answer_exposure.username} on AnswerBot ID (Exposure) is not a high-level ID.`;
+            }
+        }
+
         const conflictValues = Object.values(conflicts.current).filter(value => value !== '');
         if (conflictValues.every((value) => value === '')) {
             setAlert({ 'display': 'none', 'severity': '', 'text': '' });
