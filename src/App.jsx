@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import { AuthProvider } from "./context/AuthProvider";
 import AccountsDataGrid from "./components/Accounts/AccountsDataGrid";
+import IncreaseLevel from "./components/IncreaseLevel/IncreaseLevel";
 
 const SERVER = process.env.REACT_APP_SERVER_API;
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/add_account",
         element: <AddAccount />,
+      },
+      {
+        path: "/increase_level",
+        element: <IncreaseLevel />,
       },
       {
         path: "/question_answer_form",

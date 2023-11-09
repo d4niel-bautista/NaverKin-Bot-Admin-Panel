@@ -21,6 +21,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import { Button } from '@mui/material';
 
 const drawerWidth = 260;
@@ -104,19 +105,25 @@ const Layout = () => {
     setOpen(false);
   };
 
-  const drawerItems = useRef([{
-    text: "Accounts",
-    icon: <GroupIcon />,
-    path: '/accounts',
-  }, {
-    text: "Add Naver Account",
-    icon: <PersonAddIcon />,
-    path: '/add_account',
-  }, {
-    text: "Question Answer Form",
-    icon: <DescriptionIcon />,
-    path: '/question_answer_form',
-  }]);
+  const drawerItems = useRef([
+    {
+      text: "Accounts",
+      icon: <GroupIcon />,
+      path: '/accounts',
+    }, {
+      text: "Add Naver Account",
+      icon: <PersonAddIcon />,
+      path: '/add_account',
+    }, {
+      text: "Increase Level",
+      icon: <KeyboardDoubleArrowUpIcon />,
+      path: '/increase_level',
+    }, {
+      text: "Question Answer Form",
+      icon: <DescriptionIcon />,
+      path: '/question_answer_form',
+    },
+  ]);
 
   let location = useLocation();
   useEffect(() => {
