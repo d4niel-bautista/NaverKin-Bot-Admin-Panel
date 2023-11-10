@@ -32,9 +32,10 @@ for (let i = 1; i < 21; i++) {
 }
 
 const IncreaseLevel = () => {
-    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 60, 'page_refresh': 600, 'cooldown': 64800 });
+    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 20, 'cooldown': 64800 });
+    const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 20, 'cooldown': 64800 });
     const [promptConfigsList, setPromptConfigsList] = useState([]);
-    const [promptConfigs, setPromptConfigs] = useState({ 'id': 0, 'prompt': '', 'postscript': '', 'prohibited_words': '' })
+    const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
     const [token] = useOutletContext();
 
@@ -51,8 +52,9 @@ const IncreaseLevel = () => {
             if (response.ok) {
                 const data = await response.json();
                 setBotConfigs(data.botconfigs);
+                setTempBotConfigs(data.botconfigs);
                 setPromptConfigsList(data.prompt_configs);
-                console.log(data)
+                setLevelupAccounts(data.levelup_accounts);
             }
         }
         fetchAutoanswerBotConfigs();
@@ -64,15 +66,40 @@ const IncreaseLevel = () => {
             ...promptConfigs,
             [name]: value,
         });
+    };
 
-        // const response = await fetch(SERVER + "/autoanswerbot_prompt", {
-        //     method: "PATCH",
-        //     body: JSON.stringify({ 'id': promptConfigs.id, [name]: value }),
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Authorization": "Bearer " + token,
-        //     }
-        // });
+    const changeBotConfigs = async (e) => {
+        const { name, value } = e.target;
+        setTempBotConfigs({ ...tempBotConfigs, [name]: value });
+    };
+
+    const revertChanges = () => {
+        setTempBotConfigs(botConfigs);
+        if (promptConfigs['id'] !== '') {
+            setPromptConfigs(promptConfigsList.find(obj => obj.id === promptConfigs['id']));
+        }
+    };
+
+    const updateChanges = async (e) => {
+        e.preventDefault();
+
+        const configs = { 'botconfigs': tempBotConfigs, 'prompt_configs': promptConfigs };
+        const response = await fetch(SERVER + "/autoanswerbot_configs", {
+            method: "PATCH",
+            body: JSON.stringify(configs),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            data.botconfigs['answers_per_day'] = 20;
+            setBotConfigs(tempBotConfigs);
+            setTempBotConfigs(tempBotConfigs);
+            setPromptConfigs(promptConfigs);
+        }
     };
 
     return (
@@ -82,29 +109,29 @@ const IncreaseLevel = () => {
             </Typography>
             <Grid container rowSpacing={3}>
                 <Grid item md={12}>
-                    <TextField select label="Submit Delay" name="submit_delay" value={botConfigs['submit_delay']} sx={{ width: '150px', marginRight: 2 }}>
+                    <TextField select label="Submit Delay" name="submit_delay" onChange={changeBotConfigs} value={tempBotConfigs['submit_delay']} sx={{ width: '150px', marginRight: 2 }}>
                         {Object.keys(delayValues).map((key) =>
                             <MenuItem key={key} value={delayValues[key]}>{key}</MenuItem>
                         )}
                     </TextField>
-                    <TextField select label="Next Question" name="page_refresh" value={botConfigs['page_refresh']} sx={{ width: '150px', marginRight: 2 }}>
+                    <TextField select label="Next Question" name="page_refresh" onChange={changeBotConfigs} value={tempBotConfigs['page_refresh']} defaultValue={20} sx={{ width: '150px', marginRight: 2 }}>
                         {Object.keys(delayValues).map((key) =>
                             <MenuItem key={key} value={delayValues[key]}>{key}</MenuItem>
                         )}
                     </TextField>
-                    <TextField select label="Answers per Day" defaultValue={20} sx={{ width: '170px', marginRight: 2 }}>
+                    <TextField select label="Answers per Day" name="answers_per_day" onChange={changeBotConfigs} value={tempBotConfigs['answers_per_day']} sx={{ width: '170px', marginRight: 2 }}>
                         {answersPerDay.map((num) =>
                             <MenuItem key={num} value={num}>{num}</MenuItem>
                         )}
                     </TextField>
-                    <TextField select label="Restart After" name="cooldown" value={botConfigs['cooldown']} sx={{ width: '170px', marginRight: 2 }}>
+                    <TextField select label="Restart After" name="cooldown" onChange={changeBotConfigs} value={tempBotConfigs['cooldown']} sx={{ width: '170px', marginRight: 2 }}>
                         {Object.keys(cooldownValues).map((key) =>
                             <MenuItem key={key} value={cooldownValues[key]}>{key}</MenuItem>
                         )}
                     </TextField>
                 </Grid>
                 <Grid item md={12}>
-                    <TextField select label="Category" name="description" sx={{ width: '160px', marginRight: 2 }} onChange={(e) => setPromptConfigs({ 'id': e.target.value['id'], 'prompt': e.target.value['prompt'], 'postscript': e.target.value['postscript'], 'prohibited_words': e.target.value['prohibited_words'] })}>
+                    <TextField select label="Category" name="description" defaultValue={''} sx={{ width: '160px', marginRight: 2 }} onChange={(e) => setPromptConfigs({ 'id': e.target.value['id'], 'prompt': e.target.value['prompt'], 'postscript': e.target.value['postscript'], 'prohibited_words': e.target.value['prohibited_words'] })}>
                         {promptConfigsList.map((item) =>
                             <MenuItem key={item.id} value={item}>{item.description}</MenuItem>
                         )}
@@ -140,15 +167,15 @@ const IncreaseLevel = () => {
                         onChange={changePromptConfigs}
                     />
                 </Grid>
-                <Grid container item columnSpacing={2} sx={{marginTop: -2, marginLeft: 21}}>
+                <Grid container item columnSpacing={2} sx={{ marginTop: -2, marginLeft: 21 }}>
                     <Grid item>
-                        <Button color="secondary" variant="contained">
+                        <Button color="secondary" variant="contained" onClick={revertChanges}>
                             Cancel
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button color="primary" variant="contained">
-                            Save
+                        <Button color="primary" variant="contained" onClick={updateChanges}>
+                            Update
                         </Button>
                     </Grid>
                 </Grid>
