@@ -20,6 +20,7 @@ import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import { Button } from '@mui/material';
@@ -114,6 +115,10 @@ const Layout = () => {
       text: "Add Naver Account",
       icon: <PersonAddIcon />,
       path: '/add_account',
+    }, {
+      text: "Configurations",
+      icon: <SettingsIcon />,
+      path: '/configurations',
     }, {
       text: "Increase Level",
       icon: <KeyboardDoubleArrowUpIcon />,
