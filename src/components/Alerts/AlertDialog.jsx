@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import React from 'react'
 
-const AlertDialog = ({ handleClose, alertDialog, handleConfirm }) => {
+const AlertDialog = ({ handleClose, alertDialog, handleConfirm, component }) => {
   const descriptionLines = alertDialog.description.split('\n');
 
   return (
@@ -32,6 +32,7 @@ const AlertDialog = ({ handleClose, alertDialog, handleConfirm }) => {
             </>
           )}
         </DialogContentText>
+        {component && component}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
