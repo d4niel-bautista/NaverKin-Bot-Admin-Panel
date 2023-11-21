@@ -30,7 +30,7 @@ const Categories = () => {
                 const data = await response.json();
                 setCategories(data.shift() ? data : []);
             }
-        }
+        };
         fetchCategories();
     }, []);
 
@@ -45,6 +45,22 @@ const Categories = () => {
 
     const handleAdd = () => {
         setAddDialog(addDialog => ({ ...addDialog, open: true }));
+    };
+
+    const handleDelete = async () => {
+        const response = await fetch(SERVER + "/categories", {
+            method: "DELETE",
+            body: JSON.stringify(rowSelectionModel),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            }
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            setCategories(categories.filter((category) => !data.success_delete.includes(category.category)));
+        }
     };
 
     const submitNewCategory = async () => {
@@ -102,7 +118,8 @@ const Categories = () => {
                 slotProps={{
                     toolbar: {
                         selected,
-                        handleAdd
+                        handleAdd,
+                        handleDelete
                     },
                 }}
                 checkboxSelection

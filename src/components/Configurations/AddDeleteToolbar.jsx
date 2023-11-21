@@ -5,12 +5,13 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AlertDialog from '../Alerts/AlertDialog';
 
-const AddDeleteToolbar = ({ selected, handleAdd }) => {
+const AddDeleteToolbar = ({ selected, handleAdd, handleDelete }) => {
     const [deleteDialog, setDeleteDialog] = useState({ open: false, title: 'Are you sure you want to delete the following? This action is irreversible.', description: '' });
     const description = selected.join('\n');
 
     const submitDelete = async () => {
         setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
+        handleDelete();
     };
 
     return (
