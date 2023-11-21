@@ -79,7 +79,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
 
         if (formType === "1:2" && selectedAccounts.current['answer_exposure'] > 0) {
             const answer_exposure = interactions.find(account => account.id === selectedAccounts.current['answer_exposure'])
-            if (answer_exposure.levelup_id === 0) {
+            if (answer_exposure.category === 1) {
                 const addNewLine = conflicts.current['answer_exposure'] !== '' ? '\n' : '';
                 conflicts.current['answer_exposure'] += `${addNewLine}Account ${answer_exposure.username} on AnswerBot ID (Exposure) is not a high-level ID.`;
             }
@@ -122,7 +122,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                         value={item.id}
                                     >
                                         {item.username}
-                                        {item.levelup_id === 1 &&
+                                        {item.category > 1 &&
                                             <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
                                         }
                                     </MenuItem>
@@ -148,7 +148,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                         value={item.id}
                                     >
                                         {item.username}
-                                        {item.levelup_id === 1 &&
+                                        {item.category > 1 &&
                                             <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
                                         }
                                     </MenuItem>
@@ -176,7 +176,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                         value={item.id}
                                     >
                                         {item.username}
-                                        {item.levelup_id === 1 &&
+                                        {item.category > 1 &&
                                             <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
                                         }
                                     </MenuItem>
@@ -202,7 +202,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                         value={item.id}
                                     >
                                         {item.username}
-                                        {item.levelup_id === 1 &&
+                                        {item.category > 1 &&
                                             <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
                                         }
                                     </MenuItem>
@@ -228,7 +228,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                         value={item.id}
                                     >
                                         {item.username}
-                                        {item.levelup_id === 1 &&
+                                        {item.category > 1 &&
                                             <CircleIcon sx={{ fontSize: 14, marginLeft: 'auto', color: '#f7d547' }} />
                                         }
                                     </MenuItem>
