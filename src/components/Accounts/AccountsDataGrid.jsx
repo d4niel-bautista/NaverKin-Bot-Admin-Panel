@@ -19,7 +19,7 @@ const columnsInitial = [
         valueOptions: []
     },
     {
-        field: 'date_registered',
+        field: 'registration_date',
         headerName: 'Registration', width: 100, type: 'date',
         editable: true,
         valueGetter: (params) => {
@@ -29,7 +29,15 @@ const columnsInitial = [
             return params.value ? moment(params.value).format('DD/MM/YYYY') : '';
         }
     },
-    { field: 'verified', headerName: 'Verified', width: 80, editable: true },
+    {
+        field: 'verified',
+        headerName: 'Verified', width: 80,
+        type: 'singleSelect',
+        editable: true,
+        getOptionValue: (value) => value.value,
+        getOptionLabel: (value) => value.label,
+        valueOptions: [{'value': true, 'label': 'Yes'}, {'value': false, 'label': 'No'}]
+    },
     { field: 'last_login', headerName: 'Last Login', width: 100, editable: true },
     { field: 'account_url', headerName: 'Profile URL', width: 120, editable: true },
     { field: 'recovery_email', headerName: 'Recovery Email', width: 120, editable: true },
@@ -139,10 +147,10 @@ const AccountsDataGrid = () => {
 
         const data = await response.json();
         if (response.ok) {
-            setSnackbar({ open: true, severity: 'success', description: data })
+            setSnackbar({ open: true, severity: 'success', description: data.message })
             return updatedRow;
         } else {
-            setSnackbar({ open: true, severity: 'error', description: data })
+            setSnackbar({ open: true, severity: 'error', description: data.message })
             return originalRow;
         }
     };
