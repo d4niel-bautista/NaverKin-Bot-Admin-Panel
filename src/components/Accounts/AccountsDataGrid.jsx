@@ -7,8 +7,7 @@ import AlertSnackbar from '../Alerts/AlertSnackbar';
 import DataGridToolbar from './DataGridToolbar';
 const moment = require('moment');
 
-const categories = ['Test 1', 'Test 2', 'Test 3']
-const columns = [
+const columnsInitial = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'Username', width: 100 },
     { field: 'password', headerName: 'Password', width: 100, editable: true },
@@ -17,7 +16,7 @@ const columns = [
         field: 'category',
         headerName: 'Category', width: 100, editable: true,
         type: 'singleSelect',
-        valueOptions: categories
+        valueOptions: []
     },
     {
         field: 'date_registered',
@@ -54,10 +53,11 @@ const columns = [
         type: 'singleSelect',
         valueOptions: ['Male', 'Female', 'Other']
     },
-]
+];
 
 const AccountsDataGrid = () => {
     const [accounts, setAccounts] = useState([]);
+    const [columns, setColumns] = useState(columnsInitial);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [selectedUsernames, setSelectedUsernames] = useState([]);
     const [snackbar, setSnackbar] = useState({
@@ -82,7 +82,35 @@ const AccountsDataGrid = () => {
                 setAccounts(data);
             }
         }
+        const fetchCategories = async () => {
+            const response = await fetch(SERVER + "/categories", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setColumns((columns) => {
+                    const updatedColumns = [...columns];
+                    const categoryColumnIndex = updatedColumns.findIndex(column => column.field === "category");
+
+                    if (categoryColumnIndex !== -1) {
+                        updatedColumns[categoryColumnIndex] = {
+                            ...updatedColumns[categoryColumnIndex],
+                            getOptionValue: (value) => value.id,
+                            getOptionLabel: (value) => value.category,
+                            valueOptions: data
+                        }
+                    }
+                    return updatedColumns;
+                })
+            }
+        };
         fetchAccounts();
+        fetchCategories();
     }, []);
 
     const handleRowSelectionModelChange = (newRowSelectionModel) => {
