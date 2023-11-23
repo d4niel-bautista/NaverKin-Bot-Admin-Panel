@@ -17,16 +17,21 @@ const moment = require('moment');
 
 const AddAccount = () => {
     const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-        levelup_id: 0,
-        account_url: '',
-        recovery_email: '',
-        name: '',
-        date_of_birth: '',
-        gender: '',
-        mobile_no: '',
-        status: 0,
+        "username": '',
+        "password": '',
+        "level": '',
+        "category": 1,
+        "registration_date": '',
+        "verified": false,
+        "last_login": '',
+        "levelup_id": 0,
+        "account_url": '',
+        "recovery_email": '',
+        "name": '',
+        "date_of_birth": '',
+        "gender": 'Male',
+        "mobile_no": '',
+        "status": 0,
     });
     const [alertMessage, setAlertMessage] = useState({
         open: false,
@@ -50,7 +55,8 @@ const AddAccount = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const currentDate = moment().format('YYYY-MM-DD');
-        formData.date_of_birth = formData.date_of_birth === "" ? formData.date_of_birth = currentDate : formData.date_of_birth;
+        formData["date_of_birth"] = formData["date_of_birth"] === "" ? formData["date_of_birth"] = currentDate : formData["date_of_birth"];
+        formData["registration_date"] = currentDate;
 
         const response = await fetch(SERVER + "/add_account", {
             method: "POST", body: JSON.stringify(formData),
@@ -103,7 +109,6 @@ const AddAccount = () => {
                                 fullWidth
                                 label="Password"
                                 name="password"
-                                type="password"
                                 variant="outlined"
                                 value={formData.password}
                                 onChange={handleChange}
@@ -126,11 +131,9 @@ const AddAccount = () => {
                                 fullWidth
                                 label="Account URL"
                                 name="account_url"
-                                type="account_url"
                                 variant="outlined"
                                 value={formData.account_url}
                                 onChange={handleChange}
-                                required
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -176,9 +179,9 @@ const AddAccount = () => {
                                 value={formData.gender}
                                 onChange={handleChange}
                             >
-                                <MenuItem value="male">Male</MenuItem>
-                                <MenuItem value="female">Female</MenuItem>
-                                <MenuItem value="other">Other</MenuItem>
+                                <MenuItem value="Male">Male</MenuItem>
+                                <MenuItem value="Female">Female</MenuItem>
+                                <MenuItem value="Other">Other</MenuItem>
                             </TextField>
                         </Grid>
                         <Grid item xs={12}>
