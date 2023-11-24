@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton, Backdrop, CircularProgress } from '@mui/material';
 import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
@@ -16,7 +16,48 @@ const QuestionAnswerForm = () => {
     const [loadingState, setLoadingState] = useState(false);
     const [promptConfigsOpen, setPromptConfigsOpen] = useState(false);
     const [accountsSelection, setAccountsSelection] = useState(false);
+    const [questionPromptConfigs, setQuestionPromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
+    const [prohibitedWords, setProhibitedWords] = useState("");
+    const [interactions, setInteractions] = useState([]);
     const [token] = useOutletContext();
+
+    useEffect(() => {
+        const getPromptConfigs = async () => {
+            const response = await fetch(SERVER + "/prompt_configs", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setQuestionPromptConfigs({ 'query': data['question']['query'], 'prompt': data['question']['prompt'] });
+                setAnswerAdvertisementPromptConfigs({ 'query': data['answer_advertisement']['query'], 'prompt': data['answer_advertisement']['prompt'] });
+                setAnswerExposurePromptConfigs({ 'query': data['answer_exposure']['query'], 'prompt': data['answer_exposure']['prompt'] });
+                setProhibitedWords(data['prohibited_words']);
+            }
+        }
+        const fetchInteractions = async () => {
+            const response = await fetch(SERVER + "/interactions", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setInteractions(data);
+            }
+        };
+        fetchInteractions();
+        getPromptConfigs();
+    }, [])
 
     const handleTextChange = (field, text) => {
         switch (field) {
@@ -173,8 +214,17 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs closeModal={() => setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token} />)}
-            {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} handleSubmit={handleSubmit} />)}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={() => setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token}
+                questionPromptConfigs={questionPromptConfigs}
+                setQuestionPromptConfigs={setQuestionPromptConfigs}
+                answerAdvertisementPromptConfigs={answerAdvertisementPromptConfigs}
+                setAnswerAdvertisementPromptConfigs={setAnswerAdvertisementPromptConfigs}
+                answerExposurePromptConfigs={answerExposurePromptConfigs}
+                setAnswerExposurePromptConfigs={setAnswerExposurePromptConfigs}
+                prohibitedWords={prohibitedWords}
+                setProhibitedWords={setProhibitedWords}
+            />)}
+            {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} handleSubmit={handleSubmit} interactions={interactions} />)}
         </>
     );
 };

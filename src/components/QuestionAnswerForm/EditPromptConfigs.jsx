@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -53,33 +53,7 @@ const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     );
 }
 
-const EditPromptConfigs = ({ closeModal, isModalOpen, token }) => {
-    const [questionPromptConfigs, setQuestionPromptConfigs] = useState({ 'query': '', 'prompt': '' });
-    const [answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs] = useState({ 'query': '', 'prompt': '' });
-    const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
-    const [prohibitedWords, setProhibitedWords] = useState("");
-
-    useEffect(() => {
-        const getPromptConfigs = async () => {
-            const response = await fetch(SERVER + "/prompt_configs", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token,
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setQuestionPromptConfigs({ 'query': data['question']['query'], 'prompt': data['question']['prompt'] });
-                setAnswerAdvertisementPromptConfigs({ 'query': data['answer_advertisement']['query'], 'prompt': data['answer_advertisement']['prompt'] });
-                setAnswerExposurePromptConfigs({ 'query': data['answer_exposure']['query'], 'prompt': data['answer_exposure']['prompt'] });
-                setProhibitedWords(data['prohibited_words']);
-            }
-        }
-        getPromptConfigs();
-    }, [])
-
+const EditPromptConfigs = ({ closeModal, isModalOpen, token, questionPromptConfigs, setQuestionPromptConfigs, answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs, answerExposurePromptConfigs, setAnswerExposurePromptConfigs, prohibitedWords, setProhibitedWords }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let promptConfigsUpdate = {};

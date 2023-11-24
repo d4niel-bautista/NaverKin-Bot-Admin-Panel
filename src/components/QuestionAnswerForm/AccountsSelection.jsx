@@ -2,7 +2,7 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from
 import React, { useRef, useState } from 'react'
 import AccountsSelectionDetails from './AccountsSelectionDetails';
 
-const AccountsSelection = ({ open, handleClose, formType, handleSubmit }) => {
+const AccountsSelection = ({ open, handleClose, formType, handleSubmit, interactions }) => {
     const [alert, setAlert] = useState({ display: 'none', severity: "", text: "" });
     const selectedAccounts = useRef({ 'question': 0, 'answer_advertisement': 0, 'answer_exposure': 0 });
     const [disableSubmitButton, setDisableSubmitButton] = useState(true);
@@ -29,7 +29,7 @@ const AccountsSelection = ({ open, handleClose, formType, handleSubmit }) => {
                         </span>
                     ))}
                 </Alert>
-                <AccountsSelectionDetails selectedAccounts={selectedAccounts} formType={formType} setAlert={setAlert} setDisableSubmitButton={setDisableSubmitButton} />
+                <AccountsSelectionDetails selectedAccounts={selectedAccounts} formType={formType} setAlert={setAlert} setDisableSubmitButton={setDisableSubmitButton} interactions={interactions} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="secondary">

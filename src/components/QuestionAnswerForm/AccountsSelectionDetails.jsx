@@ -1,31 +1,9 @@
 import { Grid, MenuItem, TextField } from '@mui/material'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { SERVER } from '../../App';
-import { AuthContext } from '../../context/AuthProvider';
+import React, { useRef } from 'react'
 import CircleIcon from '@mui/icons-material/Circle';
 
-const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDisableSubmitButton }) => {
-    const [interactions, setInteractions] = useState([]);
+const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDisableSubmitButton, interactions }) => {
     const conflicts = useRef({ 'answer_advertisement': '', 'answer_exposure': '' });
-    const [token] = useContext(AuthContext);
-
-    useEffect(() => {
-        const fetchInteractions = async () => {
-            const response = await fetch(SERVER + "/interactions", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token,
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setInteractions(data);
-            }
-        };
-        fetchInteractions();
-    }, []);
 
     const handleChange = (e) => {
         const account = interactions.find(account => account.id === e.target.value);
