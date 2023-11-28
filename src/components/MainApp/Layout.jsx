@@ -23,7 +23,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-import { Button } from '@mui/material';
+import { Button, MenuItem, Select } from '@mui/material';
 
 const drawerWidth = 260;
 
@@ -96,7 +96,7 @@ const Layout = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [toolbarLabel, setToolbarLabel] = useState("");
-  const [token, setToken] = useOutletContext();
+  const [token, setToken, serverAPI, updateServerAPI] = useOutletContext();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -104,6 +104,11 @@ const Layout = () => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const changeServer = (e) => {
+    const { value } = e.target;
+    updateServerAPI(value);
   };
 
   const drawerItems = useRef([
@@ -160,12 +165,31 @@ const Layout = () => {
           <Typography variant="h6" noWrap component="div">
             {toolbarLabel}
           </Typography>
+          <Select
+            id="region"
+            name='region'
+            variant="standard"
+            disableUnderline
+            sx={{
+              '.MuiSvgIcon-root ': {
+                fill: "white!important",
+              },
+              color: "white",
+              marginLeft: 'auto',
+              fontSize: '0.7em',
+            }}
+            value={serverAPI}
+            onChange={changeServer}
+          >
+            <MenuItem value="https://zcl3zvycrkljovbv6loavyj23a0tuiyd.lambda-url.ap-southeast-1.on.aws/v1/api" sx={{ fontSize: '0.7em' }}>SG</MenuItem>
+            <MenuItem value="https://ddpsdj2zcpdri67gzviit3ve2i0ozuns.lambda-url.ap-northeast-2.on.aws/v1/api" sx={{ fontSize: '0.7em' }}>KR</MenuItem>
+          </Select>
           <Button
             color="inherit"
             aria-label="logout"
             edge="end"
             sx={{
-              marginLeft: 'auto',
+              marginLeft: 1,
             }}
             onClick={() => setToken(null)}
           >
@@ -204,9 +228,9 @@ const Layout = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet context={[token, setToken]} />
+        <Outlet context={[token, setToken, serverAPI, updateServerAPI]} />
       </Box>
-    </Box>
+    </Box >
   );
 }
 

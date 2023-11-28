@@ -14,11 +14,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
 import './LoginForm.css';
 import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import { useNavigate } from 'react-router-dom';
-import { SERVER } from '../../App';
 
 const LoginForm = () => {
     const [token, setToken] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
     const [loadingState, setLoadingState] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -45,7 +46,7 @@ const LoginForm = () => {
         e.preventDefault();
         setLoadingState(true);
 
-        const response = await fetch(SERVER + "/token", {
+        const response = await fetch(serverAPI + "/token", {
             method: "POST",
             body: JSON.stringify(`grant_type=&username=${formData.username}&password=${formData.password}&client_id=&client_secret=`),
             headers: {

@@ -1,14 +1,15 @@
-import { createContext, useEffect, useState } from "react";
-import { SERVER } from "../App";
+import { createContext, useContext, useEffect, useState } from "react";
+import { ServerAPIContext } from './ServerAPIProvider';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("NaverKinBotAdminPanel"));
+    const [serverAPI] = useContext(ServerAPIContext);
 
     useEffect(() => {
         const fetchUser = async () => {
-            const response = await fetch(SERVER + "/is_authenticated", {
+            const response = await fetch(serverAPI + "/is_authenticated", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

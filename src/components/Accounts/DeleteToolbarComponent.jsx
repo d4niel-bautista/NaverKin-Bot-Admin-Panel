@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AlertDialog from '../Alerts/AlertDialog';
-import { useOutletContext } from 'react-router-dom';
-import { SERVER } from '../../App';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 
 const DeleteToolbarComponent = ({ selectedRows, usernames, accounts, setAccounts, setSnackbar }) => {
     const [deleteDialog, setDeleteDialog] = useState({ open: false, title: 'Are you sure you want to delete the following accounts? This action is irreversible.', description: '' });
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
     const description = usernames.join('\n');
 
     const handleDelete = async () => {
-        const response = await fetch(SERVER + "/delete_account", {
+        const response = await fetch(serverAPI + "/delete_account", {
             method: "DELETE",
             body: JSON.stringify(selectedRows),
             headers: {

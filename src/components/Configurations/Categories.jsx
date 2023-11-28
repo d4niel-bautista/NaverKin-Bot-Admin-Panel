@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { SERVER } from '../../App';
-import { useOutletContext } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import { DataGrid } from '@mui/x-data-grid';
 import AddDeleteToolbar from './AddDeleteToolbar';
 import AlertDialog from '../Alerts/AlertDialog';
@@ -14,11 +14,12 @@ const Categories = () => {
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [selected, setSelectedRows] = useState([]);
     const [addDialog, setAddDialog] = useState({ open: false, title: 'Add Category', description: 'Enter category name below:' });
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const response = await fetch(SERVER + "/categories", {
+            const response = await fetch(serverAPI + "/categories", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -48,7 +49,7 @@ const Categories = () => {
     };
 
     const handleDelete = async () => {
-        const response = await fetch(SERVER + "/categories", {
+        const response = await fetch(serverAPI + "/categories", {
             method: "DELETE",
             body: JSON.stringify(rowSelectionModel),
             headers: {
@@ -68,7 +69,7 @@ const Categories = () => {
             return;
         }
 
-        const response = await fetch(SERVER + "/categories", {
+        const response = await fetch(serverAPI + "/categories", {
             method: "POST", body: JSON.stringify({ 'category': newCategory }),
             headers: {
                 "Content-Type": "application/json",
@@ -89,7 +90,7 @@ const Categories = () => {
         if (updatedRow.category === '') {
             return originalRow;
         }
-        const response = await fetch(SERVER + "/categories", {
+        const response = await fetch(serverAPI + "/categories", {
             method: "PATCH", body: JSON.stringify(updatedRow),
             headers: {
                 "Content-Type": "application/json",

@@ -12,7 +12,6 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { SERVER } from '../../App';
 
 const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     const onTextChange = (e) => {
@@ -53,7 +52,7 @@ const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     );
 }
 
-const EditPromptConfigs = ({ closeModal, isModalOpen, token, questionPromptConfigs, setQuestionPromptConfigs, answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs, answerExposurePromptConfigs, setAnswerExposurePromptConfigs, prohibitedWords, setProhibitedWords }) => {
+const EditPromptConfigs = ({ closeModal, isModalOpen, token, serverAPI, questionPromptConfigs, setQuestionPromptConfigs, answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs, answerExposurePromptConfigs, setAnswerExposurePromptConfigs, prohibitedWords, setProhibitedWords }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let promptConfigsUpdate = {};
@@ -62,7 +61,7 @@ const EditPromptConfigs = ({ closeModal, isModalOpen, token, questionPromptConfi
         promptConfigsUpdate['answer_exposure'] = answerExposurePromptConfigs;
         promptConfigsUpdate['prohibited_words'] = prohibitedWords;
 
-        const response = await fetch(SERVER + "/prompt_configs", {
+        const response = await fetch(serverAPI + "/prompt_configs", {
             method: "POST", body: JSON.stringify(promptConfigsUpdate),
             headers: {
                 "Content-Type": "application/json",

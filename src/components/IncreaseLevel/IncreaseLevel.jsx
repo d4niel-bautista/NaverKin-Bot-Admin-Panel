@@ -1,7 +1,7 @@
-import { Backdrop, Box, Button, CircularProgress, Divider, Grid, Menu, MenuItem, TextField, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import { SERVER } from '../../App';
-import { useOutletContext } from 'react-router-dom';
+import { Backdrop, Box, Button, CircularProgress, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import BotConfigs from './BotConfigs';
 import PromptConfigs from './PromptConfigs';
 
@@ -13,11 +13,12 @@ const IncreaseLevel = () => {
     const [levelupAccounts, setLevelupAccounts] = useState([]);
     const [levelupAccount, setLevelupAccount] = useState();
     const [loadingState, setLoadingState] = useState(false);
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
 
     useEffect(() => {
         const fetchAutoanswerBotConfigs = async () => {
-            const response = await fetch(SERVER + "/autoanswerbot_configs", {
+            const response = await fetch(serverAPI + "/autoanswerbot_configs", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -53,7 +54,7 @@ const IncreaseLevel = () => {
         e.preventDefault();
 
         const configs = { 'botconfigs': tempBotConfigs, 'prompt_configs': promptConfigs };
-        const response = await fetch(SERVER + "/autoanswerbot_configs", {
+        const response = await fetch(serverAPI + "/autoanswerbot_configs", {
             method: "PATCH",
             body: JSON.stringify(configs),
             headers: {
@@ -80,7 +81,7 @@ const IncreaseLevel = () => {
         }
 
         const autoanswerBotData = { 'levelup_account': levelupAccount, 'botconfigs': botConfigs, 'prompt_configs': promptConfigs }
-        const response = await fetch(SERVER + "/start_autoanswerbot", {
+        const response = await fetch(serverAPI + "/start_autoanswerbot", {
             method: "POST",
             body: JSON.stringify(autoanswerBotData),
             headers: {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -10,9 +10,9 @@ import {
     FormControlLabel,
     Checkbox,
 } from '@mui/material';
-import { useOutletContext } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import AlertMessage from '../Alerts/AlertMessage';
-import { SERVER } from '../../App';
 const moment = require('moment');
 
 const AddAccount = () => {
@@ -39,7 +39,8 @@ const AddAccount = () => {
         title: "",
         description: ""
     });
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
 
     const handleChange = (e) => {
         let { name, value, type, checked } = e.target;
@@ -58,7 +59,7 @@ const AddAccount = () => {
         formData["date_of_birth"] = formData["date_of_birth"] === "" ? formData["date_of_birth"] = currentDate : formData["date_of_birth"];
         formData["registration_date"] = currentDate;
 
-        const response = await fetch(SERVER + "/add_account", {
+        const response = await fetch(serverAPI + "/add_account", {
             method: "POST", body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",

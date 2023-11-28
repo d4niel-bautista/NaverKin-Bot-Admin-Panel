@@ -8,8 +8,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import AccountsDataGrid from "./components/Accounts/AccountsDataGrid";
 import IncreaseLevel from "./components/IncreaseLevel/IncreaseLevel";
 import Configurations from "./components/Configurations/Configurations";
-
-const SERVER = process.env.REACT_APP_SERVER_API;
+import { ServerAPIProvider } from "./context/ServerAPIProvider";
 
 const router = createBrowserRouter([
   {
@@ -48,12 +47,13 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div className="App">
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <ServerAPIProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ServerAPIProvider>
     </div>
   );
 };
 
-export { SERVER };
 export default App;

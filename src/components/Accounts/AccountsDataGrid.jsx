@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { SERVER } from '../../App';
-import { useOutletContext } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import { getObjectNewValues } from '../../utils/getObjectNewValues';
 import AlertSnackbar from '../Alerts/AlertSnackbar';
 import DataGridToolbar from './DataGridToolbar';
@@ -36,7 +36,7 @@ const columnsInitial = [
         editable: true,
         getOptionValue: (value) => value.value,
         getOptionLabel: (value) => value.label,
-        valueOptions: [{'value': true, 'label': 'Yes'}, {'value': false, 'label': 'No'}]
+        valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }]
     },
     { field: 'last_login', headerName: 'Last Login', width: 100, editable: true },
     { field: 'account_url', headerName: 'Profile URL', width: 120, editable: true },
@@ -73,11 +73,13 @@ const AccountsDataGrid = () => {
         severity: "",
         description: ""
     });
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
 
     useEffect(() => {
         const fetchAccounts = async () => {
-            const response = await fetch(SERVER + "/accounts", {
+            console.log(serverAPI)
+            const response = await fetch(serverAPI + "/accounts", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -91,7 +93,7 @@ const AccountsDataGrid = () => {
             }
         }
         const fetchCategories = async () => {
-            const response = await fetch(SERVER + "/categories", {
+            const response = await fetch(serverAPI + "/categories", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -137,7 +139,7 @@ const AccountsDataGrid = () => {
         }
         newValues['id'] = updatedRow['id'];
 
-        const response = await fetch(SERVER + "/update_account", {
+        const response = await fetch(serverAPI + "/update_account", {
             method: "PATCH", body: JSON.stringify(newValues),
             headers: {
                 "Content-Type": "application/json",

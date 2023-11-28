@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Box, Card, CardContent, Divider, Button, TextField, MenuItem, Grid, IconButton, Backdrop, CircularProgress } from '@mui/material';
 import QuestionArea from './QuestionArea';
 import AnswerArea from './AnswerArea';
 import EditPromptConfigs from './EditPromptConfigs';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { useOutletContext } from 'react-router-dom';
-import { SERVER } from '../../App';
+import { AuthContext } from '../../context/AuthProvider';
+import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import AccountsSelection from './AccountsSelection';
 
 const QuestionAnswerForm = () => {
@@ -21,11 +21,12 @@ const QuestionAnswerForm = () => {
     const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
     const [prohibitedWords, setProhibitedWords] = useState("");
     const [interactions, setInteractions] = useState([]);
-    const [token] = useOutletContext();
+    const [token] = useContext(AuthContext);
+    const [serverAPI] = useContext(ServerAPIContext);
 
     useEffect(() => {
         const getPromptConfigs = async () => {
-            const response = await fetch(SERVER + "/prompt_configs", {
+            const response = await fetch(serverAPI + "/prompt_configs", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -42,7 +43,7 @@ const QuestionAnswerForm = () => {
             }
         }
         const fetchInteractions = async () => {
-            const response = await fetch(SERVER + "/interactions", {
+            const response = await fetch(serverAPI + "/interactions", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -81,7 +82,7 @@ const QuestionAnswerForm = () => {
 
     const generateContent = async () => {
         setLoadingState(true);
-        const response = await fetch(SERVER + "/generate_form_content", {
+        const response = await fetch(serverAPI + "/generate_form_content", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -116,7 +117,7 @@ const QuestionAnswerForm = () => {
             questionForm['answer_exposure']['id'] = selectedAccounts.answer_exposure;
         }
 
-        const response = await fetch(SERVER + "/question_answer", {
+        const response = await fetch(serverAPI + "/question_answer", {
             method: "POST", body: JSON.stringify(questionForm),
             headers: {
                 "Content-Type": "application/json",
@@ -214,7 +215,7 @@ const QuestionAnswerForm = () => {
                     </CardContent>
                 </Card>
             </Box>
-            {promptConfigsOpen && (<EditPromptConfigs closeModal={() => setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token}
+            {promptConfigsOpen && (<EditPromptConfigs closeModal={() => setPromptConfigsOpen(false)} isModalOpen={promptConfigsOpen} token={token} serverAPI={serverAPI}
                 questionPromptConfigs={questionPromptConfigs}
                 setQuestionPromptConfigs={setQuestionPromptConfigs}
                 answerAdvertisementPromptConfigs={answerAdvertisementPromptConfigs}
