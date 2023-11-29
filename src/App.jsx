@@ -9,6 +9,7 @@ import AccountsDataGrid from "./components/Accounts/AccountsDataGrid";
 import IncreaseLevel from "./components/IncreaseLevel/IncreaseLevel";
 import Configurations from "./components/Configurations/Configurations";
 import { ServerAPIProvider } from "./context/ServerAPIProvider";
+import ActivityLog from "./components/Activity/ActivityLog";
 
 const router = createBrowserRouter([
   {
@@ -16,26 +17,32 @@ const router = createBrowserRouter([
     children: [{
       element: <Layout />,
       path: "/",
-      children: [{
-        path: "/accounts",
-        element: <AccountsDataGrid />,
-      },
-      {
-        path: "/add_account",
-        element: <AddAccount />,
-      },
-      {
-        path: "/configurations",
-        element: <Configurations />,
-      },
-      {
-        path: "/increase_level",
-        element: <IncreaseLevel />,
-      },
-      {
-        path: "/question_answer_form",
-        element: <QuestionAnswerForm />,
-      }]
+      children: [
+        {
+          path: "/accounts",
+          element: <AccountsDataGrid />,
+        },
+        {
+          path: "/add_account",
+          element: <AddAccount />,
+        },
+        {
+          path: "/configurations",
+          element: <Configurations />,
+        },
+        {
+          path: "/increase_level",
+          element: <IncreaseLevel />,
+        },
+        {
+          path: "/question_answer_form",
+          element: <QuestionAnswerForm />,
+        },
+        {
+          path: "/activity_log",
+          element: <ActivityLog />,
+        },
+      ]
     }],
   },
   {

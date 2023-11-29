@@ -23,6 +23,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Button, MenuItem, Select } from '@mui/material';
 
 const drawerWidth = 260;
@@ -132,6 +133,10 @@ const Layout = () => {
       text: "Question Answer Form",
       icon: <DescriptionIcon />,
       path: '/question_answer_form',
+    }, {
+      text: "Activity Log",
+      icon: <ListAltIcon />,
+      path: '/activity_log',
     },
   ]);
 
