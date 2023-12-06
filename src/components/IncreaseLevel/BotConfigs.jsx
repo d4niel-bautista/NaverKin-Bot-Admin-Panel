@@ -24,10 +24,7 @@ const cooldownValues = {
     '24 hours': 86400
 }
 
-const answersPerDay = [];
-for (let i = 1; i < 21; i++) {
-    answersPerDay.push(i * 10);
-}
+const answersPerDay = ["2-5", "3-7", "6-13", "10-15", "12-20"];
 
 const BotConfigs = ({ tempBotConfigs, setTempBotConfigs }) => {
     const changeBotConfigs = async (e) => {

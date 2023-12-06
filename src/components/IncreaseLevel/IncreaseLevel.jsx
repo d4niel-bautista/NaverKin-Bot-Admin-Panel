@@ -6,8 +6,8 @@ import BotConfigs from './BotConfigs';
 import PromptConfigs from './PromptConfigs';
 
 const IncreaseLevel = () => {
-    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 20, 'cooldown': 64800 });
-    const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 20, 'cooldown': 64800 });
+    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': "6-13", 'cooldown': 64800 });
+    const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': "6-13", 'cooldown': 64800 });
     const [promptConfigsList, setPromptConfigsList] = useState([]);
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
