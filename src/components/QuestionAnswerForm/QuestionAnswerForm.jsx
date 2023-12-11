@@ -224,6 +224,7 @@ const QuestionAnswerForm = () => {
                 setAnswerExposurePromptConfigs={setAnswerExposurePromptConfigs}
                 prohibitedWords={prohibitedWords}
                 setProhibitedWords={setProhibitedWords}
+                questionText={questionText}
             />)}
             {accountsSelection && (<AccountsSelection open={accountsSelection} handleClose={() => setAccountsSelection(false)} formType={formType} handleSubmit={handleSubmit} interactions={interactions} />)}
         </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -13,13 +13,34 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
+const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs, questionText = { 'title': '', 'content': '' } }) => {
     const onTextChange = (e) => {
         setPromptConfigs((promptConfigs) => ({
             ...promptConfigs,
             [e.target.name]: e.target.value
         }));
     };
+
+    useEffect(() => {
+        const processQuestionText = (questionText) => {
+            if (questionText['title'] !== '' && questionText['content'] !== '') {
+                setPromptConfigs((promptConfigs) => ({
+                    ...promptConfigs,
+                    query: questionText['title'] + '\n\n' + questionText['content']
+                }));
+            } else {
+                for (const value of Object.values(questionText)) {
+                    if (value !== '') {
+                        setPromptConfigs((promptConfigs) => ({
+                            ...promptConfigs,
+                            query: value
+                        }));
+                    }
+                }
+            }
+        };
+        processQuestionText(questionText);
+    }, []);
 
     return (
         <>
@@ -52,7 +73,7 @@ const PromptConfig = ({ description, id, promptConfigs, setPromptConfigs }) => {
     );
 }
 
-const EditPromptConfigs = ({ closeModal, isModalOpen, token, serverAPI, questionPromptConfigs, setQuestionPromptConfigs, answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs, answerExposurePromptConfigs, setAnswerExposurePromptConfigs, prohibitedWords, setProhibitedWords }) => {
+const EditPromptConfigs = ({ closeModal, isModalOpen, token, serverAPI, questionPromptConfigs, setQuestionPromptConfigs, answerAdvertisementPromptConfigs, setAnswerAdvertisementPromptConfigs, answerExposurePromptConfigs, setAnswerExposurePromptConfigs, prohibitedWords, setProhibitedWords, questionText }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let promptConfigsUpdate = {};
@@ -98,12 +119,14 @@ const EditPromptConfigs = ({ closeModal, isModalOpen, token, serverAPI, question
                         <PromptConfig description={"Answer 1 (Advertisement)"}
                             id={"answer_advertisement"}
                             promptConfigs={answerAdvertisementPromptConfigs}
-                            setPromptConfigs={setAnswerAdvertisementPromptConfigs} />
+                            setPromptConfigs={setAnswerAdvertisementPromptConfigs}
+                            questionText={questionText} />
                         <Divider sx={{ my: 2 }} />
                         <PromptConfig description={"Answer 2 (Exposure)"}
                             id={"answer_exposure"}
                             promptConfigs={answerExposurePromptConfigs}
-                            setPromptConfigs={setAnswerExposurePromptConfigs} />
+                            setPromptConfigs={setAnswerExposurePromptConfigs}
+                            questionText={questionText} />
                     </Grid>
                     <Grid item xs={5}>
                         <Typography variant="body1">
