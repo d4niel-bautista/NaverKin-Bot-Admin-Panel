@@ -10,7 +10,7 @@ const DataGridToolbar = (props) => {
             <Grid container columnSpacing={12} rowSpacing={2}>
                 <Grid item xs={12}>
                     <GridToolbarExport printOptions={{ disableToolbarButton: true }} sx={{ fontWeight: 'bold' }} />
-                    <AddAccountToolbarComponent />
+                    <AddAccountToolbarComponent categories={props.categories} />
                     <DeleteToolbarComponent
                         selectedRows={props.rowSelectionModel}
                         usernames={props.selectedUsernames}

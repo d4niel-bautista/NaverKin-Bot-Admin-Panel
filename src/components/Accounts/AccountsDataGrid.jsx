@@ -66,6 +66,7 @@ const columnsInitial = [
 const AccountsDataGrid = () => {
     const [accounts, setAccounts] = useState([]);
     const [columns, setColumns] = useState(columnsInitial);
+    const [categories, setCategories] = useState([]);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [selectedUsernames, setSelectedUsernames] = useState([]);
     const [snackbar, setSnackbar] = useState({
@@ -78,7 +79,6 @@ const AccountsDataGrid = () => {
 
     useEffect(() => {
         const fetchAccounts = async () => {
-            console.log(serverAPI)
             const response = await fetch(serverAPI + "/accounts", {
                 method: "GET",
                 headers: {
@@ -116,7 +116,8 @@ const AccountsDataGrid = () => {
                         }
                     }
                     return updatedColumns;
-                })
+                });
+                setCategories(data);
             }
         };
         fetchAccounts();
@@ -179,7 +180,8 @@ const AccountsDataGrid = () => {
                         selectedUsernames,
                         accounts,
                         setAccounts,
-                        setSnackbar
+                        setSnackbar,
+                        categories
                     },
                 }}
                 initialState={{

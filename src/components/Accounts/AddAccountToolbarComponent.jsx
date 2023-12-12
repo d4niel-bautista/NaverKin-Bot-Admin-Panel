@@ -2,15 +2,16 @@ import { Button } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import React, { useState } from 'react';
 import NewWindow from 'react-new-window';
+import SaveAccount from './SaveAccount';
 
-const AddAccountToolbarComponent = () => {
+const AddAccountToolbarComponent = ({ categories }) => {
     const [openAddAccountWindow, setOpenAddAccountWindow] = useState(false);
 
     return (
         <>
             {openAddAccountWindow && (
                 <NewWindow onUnload={() => setOpenAddAccountWindow(false)}>
-                    <h1>Save Account</h1>
+                    <SaveAccount categories={categories} />
                 </NewWindow>
             )}
             <Button
