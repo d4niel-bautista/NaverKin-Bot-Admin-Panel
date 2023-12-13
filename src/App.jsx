@@ -1,6 +1,5 @@
 import QuestionAnswerForm from "./components/QuestionAnswerForm/QuestionAnswerForm";
 import LoginForm from "./components/Login/LoginForm";
-import AddAccount from "./components/Accounts/AddAccount";
 import Layout from "./components/MainApp/Layout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./routes/PrivateRoutes";
@@ -21,10 +20,6 @@ const router = createBrowserRouter([
         {
           path: "/accounts",
           element: <AccountsDataGrid />,
-        },
-        {
-          path: "/add_account",
-          element: <AddAccount />,
         },
         {
           path: "/configurations",
