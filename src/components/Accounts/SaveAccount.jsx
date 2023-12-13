@@ -30,9 +30,7 @@ const SaveAccount = ({ action, account, categories, token, serverAPI }) => {
 
     useEffect(() => {
         if (action === "edit") {
-            for (const [key, value] of Object.entries(account)) {
-                formData[key] = value;
-            }
+            setFormData(account);
         }
     }, []);
 

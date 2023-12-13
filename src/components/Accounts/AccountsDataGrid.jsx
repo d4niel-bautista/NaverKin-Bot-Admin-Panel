@@ -5,16 +5,18 @@ import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import { getObjectNewValues } from '../../utils/getObjectNewValues';
 import AlertSnackbar from '../Alerts/AlertSnackbar';
 import DataGridToolbar from './DataGridToolbar';
+import NewWindow from 'react-new-window';
+import SaveAccount from './SaveAccount';
 const moment = require('moment');
 
 const columnsInitial = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'Username', width: 100 },
-    { field: 'password', headerName: 'Password', width: 100, editable: true },
+    { field: 'password', headerName: 'Password', width: 100 },
     { field: 'level', headerName: 'Level', width: 80 },
     {
         field: 'category',
-        headerName: 'Category', width: 100, editable: true,
+        headerName: 'Category', width: 100,
         type: 'singleSelect',
         valueOptions: []
     },
@@ -38,10 +40,10 @@ const columnsInitial = [
         getOptionLabel: (value) => value.label,
         valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }]
     },
-    { field: 'last_login', headerName: 'Last Login', width: 100, editable: true },
-    { field: 'account_url', headerName: 'Profile URL', width: 120, editable: true },
-    { field: 'recovery_email', headerName: 'Recovery Email', width: 120, editable: true },
-    { field: 'name', headerName: 'Name', width: 120, editable: true },
+    { field: 'last_login', headerName: 'Last Login', width: 100 },
+    { field: 'account_url', headerName: 'Profile URL', width: 120 },
+    { field: 'recovery_email', headerName: 'Recovery Email', width: 120 },
+    { field: 'name', headerName: 'Name', width: 120 },
     {
         field: 'date_of_birth',
         headerName: 'Date of Birth', width: 100, type: 'date',
@@ -53,7 +55,7 @@ const columnsInitial = [
             return params.value ? moment(params.value).format('DD/MM/YYYY') : '';
         }
     },
-    { field: 'mobile_no', headerName: 'Mobile No', width: 100, editable: true },
+    { field: 'mobile_no', headerName: 'Mobile No', width: 100 },
     {
         field: 'gender',
         headerName: 'Gender', width: 100,
@@ -74,6 +76,8 @@ const AccountsDataGrid = () => {
         severity: "",
         description: ""
     });
+    const [openEditAccountWindow, setOpenEditAccountWindow] = useState(false);
+    const [accountToEdit, setAccountToEdit] = useState([]);
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
 
@@ -158,8 +162,28 @@ const AccountsDataGrid = () => {
         }
     };
 
+    const handleCellDoubleClick = (params, event) => {
+        if (params.field === "username") {
+            editAccount(params.row);
+        } else if (params.field === "account_url") {
+            if (params.row.account_url) {
+                window.open(params.row.account_url, "", "toolbar=yes,scrollbars=yes,resizable=yes,top=10,left=100,width=900,height=600");
+            }
+        }
+    };
+
+    const editAccount = (account) => {
+        setAccountToEdit(account);
+        setOpenEditAccountWindow(true);
+    };
+
     return (
         <>
+            {openEditAccountWindow === true ? (
+                <NewWindow onUnload={() => setOpenEditAccountWindow(false)}>
+                    <SaveAccount action="edit" account={accountToEdit} categories={categories} token={token} serverAPI={serverAPI} />
+                </NewWindow>
+            ) : null}
             <DataGrid
                 sx={{
                     '.MuiDataGrid-columnHeaders': {
@@ -198,6 +222,7 @@ const AccountsDataGrid = () => {
                 onRowSelectionModelChange={handleRowSelectionModelChange}
                 processRowUpdate={onRowUpdate}
                 onProcessRowUpdateError={(error) => console.log(error)}
+                onCellDoubleClick={(params, event) => handleCellDoubleClick(params, event)}
             />
             <AlertSnackbar
                 open={snackbar.open}
