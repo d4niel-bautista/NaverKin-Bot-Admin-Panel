@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import NewWindow from 'react-new-window';
 import SaveAccount from './SaveAccount';
 
-const AddAccountToolbarComponent = ({ categories }) => {
+const AddAccountToolbarComponent = ({ categories, token, serverAPI }) => {
     const [openAddAccountWindow, setOpenAddAccountWindow] = useState(false);
 
     return (
         <>
             {openAddAccountWindow && (
                 <NewWindow onUnload={() => setOpenAddAccountWindow(false)}>
-                    <SaveAccount categories={categories} />
+                    <SaveAccount action="add" categories={categories} token={token} serverAPI={serverAPI} />
                 </NewWindow>
             )}
             <Button

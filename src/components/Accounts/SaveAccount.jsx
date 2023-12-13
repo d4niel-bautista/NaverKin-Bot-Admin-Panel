@@ -62,7 +62,7 @@ const SaveAccount = ({ action, account, categories, token, serverAPI }) => {
         });
 
         if (response.ok) {
-            setAlertMessage({ open: true, severity: "success", title: "Account " + action === "add" ? "Added" : "Updated", description: `Account "${formData.username}" is successfully saved` })
+            setAlertMessage({ open: true, severity: "success", title: `Account ${action === "add" ? "Added" : "Updated"}`, description: `Account "${formData.username}" is successfully saved` })
         } else if (response.status === 403) {
             setAlertMessage({ open: true, severity: "error", title: "Duplicate Entry", description: `Account "${formData.username}" already exists!` })
         } else {

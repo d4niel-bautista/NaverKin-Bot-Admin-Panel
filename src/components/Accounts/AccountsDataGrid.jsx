@@ -181,7 +181,9 @@ const AccountsDataGrid = () => {
                         accounts,
                         setAccounts,
                         setSnackbar,
-                        categories
+                        categories,
+                        token,
+                        serverAPI
                     },
                 }}
                 initialState={{
