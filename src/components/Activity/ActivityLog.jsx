@@ -3,8 +3,18 @@ import Logins from './Logins';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import AnswerResponses from './AnswerResponses';
-import { Box, Grid } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import QuestionPosts from './QuestionPosts';
+
+const TabPanel = ({ value, index, children }) => {
+    return (
+        <div
+            hidden={value !== index}
+        >
+            {value === index && children}
+        </div>
+    );
+};
 
 const ActivityLog = () => {
     const [token] = useContext(AuthContext);
@@ -12,6 +22,7 @@ const ActivityLog = () => {
     const [answerResponses, setAnswerResponses] = useState([]);
     const [questionPosts, setQuestionPosts] = useState([]);
     const [logins, setLogins] = useState([]);
+    const [value, setValue] = useState(0);
 
     useEffect(() => {
         const fetchActivities = async () => {
@@ -33,18 +44,31 @@ const ActivityLog = () => {
         fetchActivities();
     }, []);
 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (
-        <Grid container rowSpacing={2} columnSpacing={2}>
-            <Grid item xs={12} sm={12} lg={12} xl={3}>
+        <>
+            <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange}>
+                        <Tab label="Logins" />
+                        <Tab label="Answer Responses" />
+                        <Tab label="Question Posts" />
+                    </Tabs>
+                </Box>
+            </Box>
+            <TabPanel value={value} index={0}>
                 <Logins logins={logins} />
-            </Grid>
-            <Grid item xs={12} sm={12} lg={12} xl={9}>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
                 <AnswerResponses answerResponses={answerResponses} />
-            </Grid>
-            <Grid item xs={12} sm={12} lg={12}>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
                 <QuestionPosts questionPosts={questionPosts} />
-            </Grid>
-        </Grid>
+            </TabPanel>
+        </>
     );
 };
 

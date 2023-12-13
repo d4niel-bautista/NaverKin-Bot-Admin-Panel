@@ -50,7 +50,7 @@ const QuestionPosts = ({ questionPosts }) => {
                 },
                 '.MuiDataGrid-columnHeaderTitle': {
                     fontWeight: 'bold'
-                }, minWidth: '800px', maxWidth: '35vw', height: '60vh'
+                }, minWidth: '800px', maxWidth: '920px', height: '60vh'
             }} />
     );
 };
