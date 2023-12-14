@@ -181,7 +181,7 @@ const AccountsDataGrid = () => {
         <>
             {openEditAccountWindow === true ? (
                 <NewWindow onUnload={() => setOpenEditAccountWindow(false)}>
-                    <SaveAccount action="edit" account={accountToEdit} categories={categories} token={token} serverAPI={serverAPI} />
+                    <SaveAccount action="edit" account={accountToEdit} categories={categories} token={token} serverAPI={serverAPI} setAccounts={setAccounts} />
                 </NewWindow>
             ) : null}
             <DataGrid
