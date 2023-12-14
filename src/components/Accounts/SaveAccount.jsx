@@ -84,7 +84,11 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
 
             if (action === "add") {
                 const data = await response.json();
-                setAccounts((accounts) => [...accounts, data]);
+                setAccounts((accounts) => {
+                    const newIndex = accounts[accounts.length - 1].index + 1;
+                    data['index'] = newIndex;
+                    return [...accounts, data];
+                });
             } else if (action === "edit") {
                 setAccounts((accounts) =>
                     accounts.map((tempAccount) =>

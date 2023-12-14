@@ -7,9 +7,11 @@ import AlertSnackbar from '../Alerts/AlertSnackbar';
 import DataGridToolbar from './DataGridToolbar';
 import NewWindow from 'react-new-window';
 import SaveAccount from './SaveAccount';
+import { addIndices } from '../../utils/addIndices';
 const moment = require('moment');
 
 const columnsInitial = [
+    { field: 'index', headerName: '#', width: 10 },
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'Username', width: 100 },
     { field: 'password', headerName: 'Password', width: 100 },
@@ -93,6 +95,7 @@ const AccountsDataGrid = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                addIndices(data);
                 setAccounts(data);
             }
         }
@@ -212,7 +215,12 @@ const AccountsDataGrid = () => {
                 }}
                 initialState={{
                     pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
+                        paginationModel: { page: 0, pageSize: 20 },
+                    },
+                    columns: {
+                        columnVisibilityModel: {
+                            id: false,
+                        },
                     },
                 }}
                 pageSizeOptions={[5, 10, 20]}
