@@ -47,7 +47,7 @@ const Logins = ({ logins }) => {
                 },
                 '.MuiDataGrid-columnHeaderTitle': {
                     fontWeight: 'bold'
-                }, maxWidth: '520px', height: '60vh'
+                }, maxWidth: '520px',
             }} />
     );
 };

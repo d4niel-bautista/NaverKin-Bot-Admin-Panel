@@ -51,7 +51,7 @@ const AnswerResponses = ({ answerResponses }) => {
                 },
                 '.MuiDataGrid-columnHeaderTitle': {
                     fontWeight: 'bold'
-                }, minWidth: '1000px', maxWidth: '50vw', height: '60vh'
+                }, maxWidth: '1160px',
             }} />
     );
 };
