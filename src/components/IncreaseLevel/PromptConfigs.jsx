@@ -12,36 +12,43 @@ const PromptConfigs = ({ promptConfigs, setPromptConfigs }) => {
 
     return (
         <>
-            <Grid item md={12}>
-                {/* <TextField select label="Category" name="description" defaultValue={''} sx={{ width: '160px', marginRight: 2 }} onChange={(e) => setPromptConfigs({ 'id': e.target.value['id'], 'prompt': e.target.value['prompt'], 'postscript': e.target.value['postscript'], 'prohibited_words': e.target.value['prohibited_words'] })}>
+            {/* <TextField select label="Category" name="description" defaultValue={''} sx={{ width: '160px', marginRight: 2 }} onChange={(e) => setPromptConfigs({ 'id': e.target.value['id'], 'prompt': e.target.value['prompt'], 'postscript': e.target.value['postscript'], 'prohibited_words': e.target.value['prohibited_words'] })}>
                     {promptConfigsList.map((item) =>
                         <MenuItem key={item.id} value={item}>{item.description}</MenuItem>
                     )}
                 </TextField> */}
+            <Grid item md={12}>
                 <TextField
                     name='prompt'
                     label='Prompt'
-                    sx={{ width: '300px', marginRight: 2 }}
+                    fullWidth
+                    sx={{ maxWidth: '50vw' }}
                     margin="dense"
                     rows={8}
                     value={promptConfigs.prompt}
                     multiline
                     onChange={changePromptConfigs}
                 />
+            </Grid>
+            <Grid item md={12}>
                 <TextField
                     name='postscript'
                     label='Postscript'
-                    sx={{ width: '200px', marginRight: 2 }}
+                    fullWidth
+                    sx={{ maxWidth: '50vw' }}
                     margin="dense"
                     rows={8}
                     value={promptConfigs.postscript}
                     multiline
                     onChange={changePromptConfigs}
                 />
+            </Grid>
+            <Grid item md={12}>
                 <TextField
                     name='prohibited_words'
                     label='Prohibited Words'
-                    sx={{ width: '200px' }}
+                    fullWidth
+                    sx={{ maxWidth: '50vw' }}
                     margin="dense"
                     rows={8}
                     value={promptConfigs.prohibited_words}
