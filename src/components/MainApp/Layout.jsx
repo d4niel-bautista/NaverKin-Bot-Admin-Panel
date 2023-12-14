@@ -42,9 +42,9 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(6)} + 4px)`,
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(6)} + 4px)`,
   },
 });
 
@@ -121,7 +121,7 @@ const Layout = () => {
       icon: <SettingsIcon />,
       path: '/configurations',
     }, {
-      text: "Increase Level",
+      text: "ID Level Up",
       icon: <KeyboardDoubleArrowUpIcon />,
       path: '/increase_level',
     }, {
@@ -218,7 +218,7 @@ const Layout = () => {
             return (
               <ListItem key={text} disablePadding>
                 <ListItemButton component={Link} to={path}>
-                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemIcon sx={{minWidth: '36px'}}>{icon}</ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
