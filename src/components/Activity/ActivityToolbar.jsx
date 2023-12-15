@@ -4,7 +4,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import React, { useState } from 'react';
 import AlertDialog from '../Alerts/AlertDialog';
 
-const ActivityToolbar = ({ selected, handleDelete, title }) => {
+const ActivityToolbar = ({ selected, handleDelete, title, component }) => {
     const [deleteDialog, setDeleteDialog] = useState({ open: false, title: 'Are you sure you want to delete? This action is irreversible.', description: '' });
 
     const submitDelete = async () => {
@@ -22,6 +22,7 @@ const ActivityToolbar = ({ selected, handleDelete, title }) => {
                                 {title}
                             </Typography>
                         }
+                        {component && component}
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={6}>
                         <Button
