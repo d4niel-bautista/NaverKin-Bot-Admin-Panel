@@ -10,14 +10,14 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
         "password": '',
         "level": '',
         "category": 1,
-        "registration_date": '',
+        "registration_date": moment().format('YYYY-MM-DD'),
         "verified": false,
         "last_login": '',
         "levelup_id": 0,
         "account_url": '',
         "recovery_email": '',
         "name": '',
-        "date_of_birth": '',
+        "date_of_birth": moment().format('YYYY-MM-DD'),
         "gender": 'Male',
         "mobile_no": '',
         "status": 0,
@@ -52,10 +52,6 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
         var response = null;
 
         if (action === "add") {
-            const currentDate = moment().format('YYYY-MM-DD');
-            formData["date_of_birth"] = formData["date_of_birth"] === "" ? formData["date_of_birth"] = currentDate : formData["date_of_birth"];
-            formData["registration_date"] = currentDate;
-
             response = await fetch(serverAPI + "/add_account", {
                 method: "POST", body: JSON.stringify(formData),
                 headers: {
@@ -167,10 +163,12 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
                                 id="registration_date"
                                 type="date"
                                 variant="outlined"
+                                value={formData.registration_date}
                                 onChange={handleChange}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                InputProps={{ inputProps: { min: "0000-01-01", max: "9999-12-31" } }}
                                 sx={{ maxWidth: '250px', marginBottom: 2 }}
                             />
                         </Grid>
@@ -219,10 +217,12 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
                                 name="date_of_birth"
                                 type="date"
                                 variant="outlined"
+                                value={formData.date_of_birth}
                                 onChange={handleChange}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                InputProps={{ inputProps: { min: "0000-01-01", max: "9999-12-31" } }}
                                 sx={{ maxWidth: '250px', marginBottom: 2 }}
                             />
                         </Grid>
