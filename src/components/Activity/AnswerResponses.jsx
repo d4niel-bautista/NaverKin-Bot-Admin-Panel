@@ -45,6 +45,16 @@ const AnswerResponses = ({ answerResponses }) => {
             onRowSelectionModelChange={setRowSelectionModel}
             checkboxSelection
             disableRowSelectionOnClick
+            initialState={{
+                pagination: {
+                    paginationModel: { page: 0, pageSize: 25 },
+                },
+                columns: {
+                    columnVisibilityModel: {
+                        id: false,
+                    },
+                },
+            }}
             sx={{
                 '.MuiDataGrid-columnHeaders': {
                     backgroundColor: '#e7e5e1',
@@ -52,7 +62,8 @@ const AnswerResponses = ({ answerResponses }) => {
                 '.MuiDataGrid-columnHeaderTitle': {
                     fontWeight: 'bold'
                 }, maxWidth: '1160px',
-            }} />
+            }}
+        />
     );
 };
 

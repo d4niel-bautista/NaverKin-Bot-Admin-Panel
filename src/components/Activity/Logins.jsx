@@ -64,6 +64,9 @@ const Logins = ({ logins, resetLoginsList, viewLoginsHistory, button, setButton 
                 },
             }}
             initialState={{
+                pagination: {
+                    paginationModel: { page: 0, pageSize: 25 },
+                },
                 columns: {
                     columnVisibilityModel: {
                         id: false,
