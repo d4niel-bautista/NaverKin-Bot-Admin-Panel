@@ -1,6 +1,8 @@
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import ActivityToolbar from './ActivityToolbar';
+import { Button } from '@mui/material';
+import { ChevronLeft } from '@mui/icons-material';
 const moment = require('moment');
 
 const columns = [
@@ -18,12 +20,35 @@ const columns = [
     },
 ];
 
-const Logins = ({ logins }) => {
+const Logins = ({ logins, resetLoginsList, viewLoginsHistory, button, setButton }) => {
     const [selected, setRowSelectionModel] = useState([]);
 
     const handleDelete = async () => {
 
     };
+
+    const handleCellDoubleClick = (params, event) => {
+        if (params.field === "username") {
+            viewLoginsHistory(params.row.username);
+            setButton(backButton);
+        }
+    };
+
+    const handleBackButtonClick = () => {
+        resetLoginsList();
+        setButton(null);
+    };
+
+    const backButton = (
+        <Button
+            size='small'
+            startIcon={<ChevronLeft />}
+            sx={{ color: '#0000008a' }}
+            onClick={handleBackButtonClick}
+        >
+            Back
+        </Button>
+    );
 
     return (
         <DataGrid
@@ -34,8 +59,16 @@ const Logins = ({ logins }) => {
                 toolbar: {
                     selected,
                     handleDelete,
-                    title: "Logins"
+                    title: "Logins",
+                    component: [button]
                 },
+            }}
+            initialState={{
+                columns: {
+                    columnVisibilityModel: {
+                        id: false,
+                    },
+                }
             }}
             rowSelectionModel={selected}
             onRowSelectionModelChange={setRowSelectionModel}
@@ -47,8 +80,10 @@ const Logins = ({ logins }) => {
                 },
                 '.MuiDataGrid-columnHeaderTitle': {
                     fontWeight: 'bold'
-                }, maxWidth: '520px',
-            }} />
+                }, maxWidth: '450px',
+            }}
+            onCellDoubleClick={(params, event) => handleCellDoubleClick(params, event)}
+        />
     );
 };
 

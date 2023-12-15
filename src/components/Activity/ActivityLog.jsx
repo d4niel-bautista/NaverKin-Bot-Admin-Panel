@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import Logins from './Logins';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import AnswerResponses from './AnswerResponses';
 import { Box, Tab, Tabs } from '@mui/material';
 import QuestionPosts from './QuestionPosts';
+import { groupObjectsByValue } from '../../utils/groupObjectsByValue';
 
 const TabPanel = ({ value, index, children }) => {
     return (
@@ -22,6 +23,9 @@ const ActivityLog = () => {
     const [answerResponses, setAnswerResponses] = useState([]);
     const [questionPosts, setQuestionPosts] = useState([]);
     const [logins, setLogins] = useState([]);
+    const groupedLogins = useRef();
+    const mostRecentLogins = useRef();
+    const [button, setButton] = useState(null);
     const [value, setValue] = useState(0);
 
     useEffect(() => {
@@ -38,7 +42,16 @@ const ActivityLog = () => {
                 const data = await response.json();
                 setAnswerResponses(data['answer_responses']);
                 setQuestionPosts(data['question_posts']);
-                setLogins(data['logins']);
+
+                const groupedByUsername = groupObjectsByValue(data['logins'], 'username');
+                groupedLogins.current = groupedByUsername;
+
+                const latestLogins = [];
+                for (const userLogins of Object.values(groupedByUsername)) {
+                    latestLogins.push(userLogins[userLogins.length - 1]);
+                }
+                mostRecentLogins.current = latestLogins;
+                setLogins(latestLogins)
             }
         };
         fetchActivities();
@@ -47,6 +60,14 @@ const ActivityLog = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const resetLoginsList = useCallback(() => {
+        setLogins(mostRecentLogins.current);
+    }, []);
+
+    const viewLoginsHistory = useCallback((username) => {
+        setLogins(groupedLogins.current[username]);
+    }, []);
 
     return (
         <>
@@ -60,7 +81,7 @@ const ActivityLog = () => {
                 </Box>
             </Box>
             <TabPanel value={value} index={0}>
-                <Logins logins={logins} />
+                <Logins logins={logins} resetLoginsList={resetLoginsList} viewLoginsHistory={viewLoginsHistory} button={button} setButton={setButton} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <AnswerResponses answerResponses={answerResponses} />
