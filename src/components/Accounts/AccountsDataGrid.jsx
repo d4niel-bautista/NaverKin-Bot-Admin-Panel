@@ -5,9 +5,9 @@ import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import { getObjectNewValues } from '../../utils/getObjectNewValues';
 import AlertSnackbar from '../Alerts/AlertSnackbar';
 import DataGridToolbar from './DataGridToolbar';
-import NewWindow from 'react-new-window';
 import SaveAccount from './SaveAccount';
 import { addIndices } from '../../utils/addIndices';
+import MUINewWindow from '../MUINewWindow/MUINewWindow';
 const moment = require('moment');
 
 const columnsInitial = [
@@ -168,6 +168,7 @@ const AccountsDataGrid = () => {
     const handleCellDoubleClick = (params, event) => {
         if (params.field === "username") {
             editAccount(params.row);
+            console.log(openEditAccountWindow);
         } else if (params.field === "account_url") {
             if (params.row.account_url) {
                 window.open(params.row.account_url, "", "toolbar=yes,scrollbars=yes,resizable=yes,top=10,left=100,width=900,height=600");
@@ -182,11 +183,11 @@ const AccountsDataGrid = () => {
 
     return (
         <>
-            {openEditAccountWindow === true ? (
-                <NewWindow onUnload={() => setOpenEditAccountWindow(false)}>
+            {openEditAccountWindow && (
+                <MUINewWindow title={"Edit Account"} onClose={() => setOpenEditAccountWindow(false)}>
                     <SaveAccount action="edit" account={accountToEdit} categories={categories} token={token} serverAPI={serverAPI} setAccounts={setAccounts} />
-                </NewWindow>
-            ) : null}
+                </MUINewWindow>
+            )}
             <DataGrid
                 sx={{
                     '.MuiDataGrid-columnHeaders': {

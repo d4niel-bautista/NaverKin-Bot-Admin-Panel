@@ -1,8 +1,8 @@
 import { Button } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import React, { useState } from 'react';
-import NewWindow from 'react-new-window';
 import SaveAccount from './SaveAccount';
+import MUINewWindow from '../MUINewWindow/MUINewWindow';
 
 const AddAccountToolbarComponent = ({ categories, token, serverAPI, setAccounts }) => {
     const [openAddAccountWindow, setOpenAddAccountWindow] = useState(false);
@@ -10,9 +10,9 @@ const AddAccountToolbarComponent = ({ categories, token, serverAPI, setAccounts 
     return (
         <>
             {openAddAccountWindow && (
-                <NewWindow onUnload={() => setOpenAddAccountWindow(false)}>
+                <MUINewWindow onClose={() => setOpenAddAccountWindow(false)}>
                     <SaveAccount action="add" categories={categories} token={token} serverAPI={serverAPI} setAccounts={setAccounts} />
-                </NewWindow>
+                </MUINewWindow>
             )}
             <Button
                 color='primary'
