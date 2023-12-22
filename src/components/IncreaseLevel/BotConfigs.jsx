@@ -24,8 +24,6 @@ const cooldownValues = {
     '24 hours': 86400
 }
 
-export const answersPerDay = ["2-5", "3-7", "6-13", "10-15", "12-20"];
-
 const BotConfigs = ({ tempBotConfigs, setTempBotConfigs }) => {
     const changeBotConfigs = async (e) => {
         const { name, value } = e.target;
@@ -44,10 +42,7 @@ const BotConfigs = ({ tempBotConfigs, setTempBotConfigs }) => {
                     <MenuItem key={key} value={delayValues[key]}>{key}</MenuItem>
                 )}
             </TextField>
-            <TextField select label="Answers per Day" name="answers_per_day" onChange={changeBotConfigs} value={tempBotConfigs['answers_per_day']} sx={{ width: '170px', marginRight: 2 }}>
-                {answersPerDay.map((num) =>
-                    <MenuItem key={num} value={num}>{num}</MenuItem>
-                )}
+            <TextField label="Answers per Day" name="answers_per_day" onChange={changeBotConfigs} value={tempBotConfigs['answers_per_day']} sx={{ width: '170px', marginRight: 2 }}>
             </TextField>
             <TextField select label="Restart After" name="cooldown" onChange={changeBotConfigs} value={tempBotConfigs['cooldown']} sx={{ width: '170px', marginRight: 2 }}>
                 {Object.keys(cooldownValues).map((key) =>
