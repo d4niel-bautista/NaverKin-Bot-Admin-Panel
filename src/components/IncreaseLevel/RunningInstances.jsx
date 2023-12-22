@@ -1,18 +1,23 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 
 const VMs = ['VM_1', 'VM_2', 'VM_3']
 
-const RunningInstances = ({ currentConnections, setPromptConfigs, setTempBotConfigs, setLevelupAccount, setDisableAll }) => {
+const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setLevelupAccount, setDisableAll }) => {
+    const [currentSelected, setCurrentSelected] = useState('');
 
-    const setAutoanswerConfigs = (connectionInfo) => {
-        console.log(connectionInfo);
+    const setAutoanswerConfigs = (connectionInfo, e) => {
+        setCurrentSelected(e.target.value);
         if (connectionInfo['is_active'] === 2) {
             setPromptConfigs(connectionInfo['prompt_configs']);
             setTempBotConfigs(connectionInfo['botconfigs']);
             setLevelupAccount(connectionInfo['account']);
         } else {
-            setLevelupAccount({"id": ''});
+            if (promptConfigs) {
+                setPromptConfigs(promptConfigs);
+            }
+            setTempBotConfigs(botConfigs);
+            setLevelupAccount({ "id": '' });
         }
         setDisableAll(connectionInfo['is_active'] === 2 ? true : false);
     };
@@ -33,7 +38,7 @@ const RunningInstances = ({ currentConnections, setPromptConfigs, setTempBotConf
                         }
                     });
                     return (
-                        <Button key={VM_id} color="primary" variant="contained" disabled={!isConnected} onClick={() => setAutoanswerConfigs(connectionInfo)}>
+                        <Button key={VM_id} value={VM_id} color="primary" variant={currentSelected === VM_id ? 'contained' : 'outlined'} disabled={!isConnected} onClick={(e) => setAutoanswerConfigs(connectionInfo, e)}>
                             {VM_id.replace('_', ' ')}
                         </Button>
                     );
