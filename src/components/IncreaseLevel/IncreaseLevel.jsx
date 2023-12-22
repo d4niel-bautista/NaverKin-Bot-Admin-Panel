@@ -75,6 +75,7 @@ const IncreaseLevel = () => {
 
     const updateChanges = async (e) => {
         e.preventDefault();
+        setLoadingState(true);
 
         const configs = { 'botconfigs': tempBotConfigs, 'prompt_configs': promptConfigs };
         const response = await fetch(serverAPI + "/autoanswerbot_configs", {
@@ -102,6 +103,8 @@ const IncreaseLevel = () => {
                 return promptConfigsList;
             });
         }
+
+        setLoadingState(false);
     };
 
     const startAutoanswerBot = async (e) => {
