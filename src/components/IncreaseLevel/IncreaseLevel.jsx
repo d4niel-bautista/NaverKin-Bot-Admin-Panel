@@ -2,14 +2,13 @@ import { Backdrop, Box, Button, CircularProgress, Grid, MenuItem, TextField, Typ
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
-import BotConfigs, { answersPerDay } from './BotConfigs';
+import BotConfigs from './BotConfigs';
 import PromptConfigs from './PromptConfigs';
 import RunningInstances from './RunningInstances';
-import { determineRange } from '../../utils/determineRange';
 
 const IncreaseLevel = () => {
-    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': "6-13", 'cooldown': 64800 });
-    const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': "6-13", 'cooldown': 64800 });
+    const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 10, 'cooldown': 64800 });
+    const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 10, 'cooldown': 64800 });
     const [promptConfigsList, setPromptConfigsList] = useState([]);
     const [autoanswerbotConnections, setAutoanswerbotConnections] = useState([]);
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
@@ -18,7 +17,7 @@ const IncreaseLevel = () => {
     const [loadingState, setLoadingState] = useState(false);
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
-    const [disableAll, setDisableAll] = useState(true);
+    const [disableAll, setDisableAll] = useState(false);
 
     useEffect(() => {
         const fetchAutoanswerBotConfigs = async () => {
@@ -51,9 +50,6 @@ const IncreaseLevel = () => {
             if (response.ok) {
                 const data = await response.json();
                 data.forEach((connection) => {
-                    if (connection["botconfigs"] && connection["botconfigs"]["answers_per_day"] !== '') {
-                        connection["botconfigs"]["answers_per_day"] = determineRange(answersPerDay, connection["botconfigs"]["answers_per_day"]);
-                    }
                     if (Object.keys(connection["prompt_configs"]).length !== 0) {
                         connection["prompt_configs"]["prohibited_words"] = connection["prompt_configs"]["prohibited_words"].join(";");
                     }
@@ -172,7 +168,7 @@ const IncreaseLevel = () => {
                         </TextField>
                     </Grid>
                     <Grid item>
-                        <Button color="primary" variant="contained" onClick={startAutoanswerBot} disabled={!levelupAccount || loadingState || disableAll}>
+                        <Button color="primary" variant="contained" onClick={startAutoanswerBot} disabled={!levelupAccount.id || loadingState || disableAll}>
                             Start
                         </Button>
                     </Grid>
