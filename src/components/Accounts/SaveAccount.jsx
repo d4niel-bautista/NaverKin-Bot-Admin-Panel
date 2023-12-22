@@ -2,6 +2,7 @@ import { Box, FormControlLabel, Checkbox, Grid, MenuItem, TextField, Typography,
 import React, { useEffect, useState } from 'react';
 import AlertMessage from '../Alerts/AlertMessage';
 import { getObjectNewValues } from '../../utils/getObjectNewValues';
+import { isDateStringValid } from '../../utils/isDateStringValid';
 const moment = require('moment');
 
 const SaveAccount = ({ action, account, categories, token, serverAPI, setAccounts }) => {
@@ -50,6 +51,19 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
         e.preventDefault();
 
         var response = null;
+
+        const dateErrors = [];
+        if (!isDateStringValid(formData.date_of_birth)) {
+            dateErrors.push(<div key={"dob"}><span>Invalid <b>Date of Birth!</b></span><br /></div>);
+        }
+        if (!isDateStringValid(formData.registration_date)) {
+            dateErrors.push(<div key={"regdate"}><span>Invalid <b>Registration Date!</b></span><br /></div>);
+        }
+        if (dateErrors.length > 0) {
+            dateErrors.push(<div key={"valid"}><span><br />Only valid date formats are accepted: <b>YYYY-MM-DD, YYYY/MM/DD, DD-MM-YYYY, DD/MM/YYYY</b></span></div>)
+            setAlertMessage({ open: true, severity: "error", title: `Invalid Values`, description: dateErrors });
+            return;
+        }
 
         if (action === "add") {
             response = await fetch(serverAPI + "/add_account", {
@@ -161,14 +175,9 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
                                 label="Registration Date"
                                 name="registration_date"
                                 id="registration_date"
-                                type="date"
                                 variant="outlined"
                                 value={formData.registration_date}
                                 onChange={handleChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                InputProps={{ inputProps: { min: "0000-01-01", max: "9999-12-31" } }}
                                 sx={{ maxWidth: '250px', marginBottom: 2 }}
                             />
                         </Grid>
@@ -215,14 +224,9 @@ const SaveAccount = ({ action, account, categories, token, serverAPI, setAccount
                                 fullWidth
                                 label="Date of Birth"
                                 name="date_of_birth"
-                                type="date"
                                 variant="outlined"
                                 value={formData.date_of_birth}
                                 onChange={handleChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                InputProps={{ inputProps: { min: "0000-01-01", max: "9999-12-31" } }}
                                 sx={{ maxWidth: '250px', marginBottom: 2 }}
                             />
                         </Grid>
