@@ -18,7 +18,7 @@ const IncreaseLevel = () => {
     const [loadingState, setLoadingState] = useState(false);
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
-    const [disableAll, setDisableAll] = useState(false);
+    const [disableAll, setDisableAll] = useState(true);
 
     useEffect(() => {
         const fetchAutoanswerBotConfigs = async () => {
@@ -50,10 +50,12 @@ const IncreaseLevel = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data)
                 data.forEach((connection) => {
                     if (connection["botconfigs"] && connection["botconfigs"]["answers_per_day"] !== '') {
                         connection["botconfigs"]["answers_per_day"] = determineRange(answersPerDay, connection["botconfigs"]["answers_per_day"]);
+                    }
+                    if (Object.keys(connection["prompt_configs"]).length !== 0) {
+                        connection["prompt_configs"]["prohibited_words"] = connection["prompt_configs"]["prohibited_words"].join(";");
                     }
                 });
                 setAutoanswerbotConnections(data);
@@ -90,10 +92,19 @@ const IncreaseLevel = () => {
 
         if (response.ok) {
             const data = await response.json();
-            data.botconfigs['answers_per_day'] = 20;
             setBotConfigs(tempBotConfigs);
             setTempBotConfigs(tempBotConfigs);
             setPromptConfigs(promptConfigs);
+            setPromptConfigsList((promptConfigsList) => {
+                const updatedPromptConfigsIndex = promptConfigsList.findIndex(obj => obj.id === promptConfigs['id']);
+                if (updatedPromptConfigsIndex !== -1) {
+                    const updatedPromptConfigsList = [...promptConfigsList];
+                    updatedPromptConfigsList[updatedPromptConfigsIndex] = promptConfigs;
+
+                    return updatedPromptConfigsList;
+                }
+                return promptConfigsList;
+            });
         }
     };
 
@@ -129,10 +140,10 @@ const IncreaseLevel = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <RunningInstances currentConnections={autoanswerbotConnections} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setDisableAll={setDisableAll} />
+            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setDisableAll={setDisableAll} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
-                    Configuration
+                    Configuration {levelupAccount.id && `[${levelupAccount.username}]`}
                 </Typography>
                 <Grid container rowSpacing={3}>
                     <BotConfigs tempBotConfigs={tempBotConfigs} setTempBotConfigs={setTempBotConfigs} />
