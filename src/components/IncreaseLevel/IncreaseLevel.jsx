@@ -14,10 +14,11 @@ const IncreaseLevel = () => {
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
     const [levelupAccount, setLevelupAccount] = useState({ "id": '' });
+    const [connectionInfo, setConnectionInfo] = useState({});
     const [loadingState, setLoadingState] = useState(false);
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
-    const [disableAll, setDisableAll] = useState(false);
+    const [disableAll, setDisableAll] = useState(true);
 
     useEffect(() => {
         const fetchAutoanswerBotConfigs = async () => {
@@ -115,7 +116,7 @@ const IncreaseLevel = () => {
             return;
         }
 
-        const autoanswerBotData = { 'levelup_account': levelupAccount, 'botconfigs': botConfigs, 'prompt_configs': promptConfigs }
+        const autoanswerBotData = { 'connection_info': connectionInfo, 'levelup_account': levelupAccount, 'botconfigs': botConfigs, 'prompt_configs': promptConfigs }
         const response = await fetch(serverAPI + "/start_autoanswerbot", {
             method: "POST",
             body: JSON.stringify(autoanswerBotData),
@@ -127,6 +128,7 @@ const IncreaseLevel = () => {
 
         if (response.ok) {
             const data = await response.json();
+            setDisableAll(true);
         }
         setLoadingState(false);
     };
@@ -139,7 +141,7 @@ const IncreaseLevel = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setDisableAll={setDisableAll} />
+            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setConnectionInfo={setConnectionInfo} setDisableAll={setDisableAll} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
                     Configuration {levelupAccount.id && `[${levelupAccount.username}]`}

@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 
 const VMs = ['VM_1', 'VM_2', 'VM_3']
 
-const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setLevelupAccount, setDisableAll }) => {
+const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setLevelupAccount, setConnectionInfo, setDisableAll }) => {
     const [currentSelected, setCurrentSelected] = useState('');
 
     const setAutoanswerConfigs = (connectionInfo, e) => {
         setCurrentSelected(e.target.value);
+        setConnectionInfo({'group_id': connectionInfo['group_id'], 'connection_id': connectionInfo['connection_id']});
+
         if (connectionInfo['is_active'] === 2) {
             setPromptConfigs(connectionInfo['prompt_configs']);
             setTempBotConfigs(connectionInfo['botconfigs']);
