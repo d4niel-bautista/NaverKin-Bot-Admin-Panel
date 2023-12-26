@@ -10,7 +10,7 @@ const IncreaseLevel = () => {
     const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 10, 'cooldown': 64800 });
     const [tempBotConfigs, setTempBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 10, 'cooldown': 64800 });
     const [promptConfigsList, setPromptConfigsList] = useState([]);
-    const [autoanswerbotConnections, setAutoanswerbotConnections] = useState([]);
+    const [autoanswerbotConnections, setAutoanswerbotConnections] = useState({});
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
     const [levelupAccount, setLevelupAccount] = useState({ "id": '' });
@@ -50,12 +50,14 @@ const IncreaseLevel = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                const connections = {};
                 data.forEach((connection) => {
                     if (Object.keys(connection["prompt_configs"]).length !== 0) {
                         connection["prompt_configs"]["prohibited_words"] = connection["prompt_configs"]["prohibited_words"].join(";");
                     }
+                    connections[connection["VM_id"]] = connection;
                 });
-                setAutoanswerbotConnections(data);
+                setAutoanswerbotConnections(connections);
             }
         };
         fetchAutoanswerBotConfigs();
@@ -129,6 +131,16 @@ const IncreaseLevel = () => {
         if (response.ok) {
             const data = await response.json();
             setDisableAll(true);
+            setAutoanswerbotConnections((connections) => ({
+                ...connections,
+                [connectionInfo["VM_id"]]: {
+                    ...connections[connectionInfo["VM_id"]],
+                    is_active: 2,
+                    prompt_configs: promptConfigs,
+                    account: levelupAccount,
+                    botconfigs: botConfigs
+                }
+            }));
         }
         setLoadingState(false);
     };
