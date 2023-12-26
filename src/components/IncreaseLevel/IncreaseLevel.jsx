@@ -1,5 +1,5 @@
 import { Backdrop, Box, Button, CircularProgress, Grid, MenuItem, TextField, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import BotConfigs from './BotConfigs';
@@ -13,6 +13,7 @@ const IncreaseLevel = () => {
     const [autoanswerbotConnections, setAutoanswerbotConnections] = useState({});
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
+    const currentlyRunningAccounts = useRef([]);
     const [levelupAccount, setLevelupAccount] = useState({ "id": '' });
     const [connectionInfo, setConnectionInfo] = useState({});
     const [loadingState, setLoadingState] = useState(false);
@@ -56,6 +57,9 @@ const IncreaseLevel = () => {
                         connection["prompt_configs"]["prohibited_words"] = connection["prompt_configs"]["prohibited_words"].join(";");
                     }
                     connections[connection["VM_id"]] = connection;
+                    if (connection["is_active"] === 2) {
+                        currentlyRunningAccounts.current.push(connection["account"]["id"]);
+                    }
                 });
                 setAutoanswerbotConnections(connections);
             }
@@ -141,6 +145,7 @@ const IncreaseLevel = () => {
                     botconfigs: botConfigs
                 }
             }));
+            currentlyRunningAccounts.current.push(levelupAccount.id);
         }
         setLoadingState(false);
     };
@@ -180,7 +185,7 @@ const IncreaseLevel = () => {
                     <Grid item>
                         <TextField select label="Account" name="levelup_account" value={levelupAccount.id} onChange={changeLevelupAccount} sx={{ width: '200px' }}>
                             {levelupAccounts.map((account) =>
-                                <MenuItem key={account.id} value={account.id}>{account.username}</MenuItem>
+                                <MenuItem key={account.id} value={account.id} disabled={currentlyRunningAccounts.current.includes(account.id)}>{account.username}</MenuItem>
                             )}
                         </TextField>
                     </Grid>
