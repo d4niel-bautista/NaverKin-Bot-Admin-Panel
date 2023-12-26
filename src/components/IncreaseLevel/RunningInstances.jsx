@@ -6,9 +6,10 @@ const VMs = ['VM_1', 'VM_2', 'VM_3']
 const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setLevelupAccount, setConnectionInfo, setDisableAll }) => {
     const [currentSelected, setCurrentSelected] = useState('');
 
-    const setAutoanswerConfigs = (connectionInfo, e) => {
+    const setAutoanswerConfigs = (e) => {
         setCurrentSelected(e.target.value);
-        setConnectionInfo({'group_id': connectionInfo['group_id'], 'connection_id': connectionInfo['connection_id']});
+        const connectionInfo = currentConnections[e.target.value];
+        setConnectionInfo({ 'group_id': connectionInfo['group_id'], 'connection_id': connectionInfo['connection_id'], 'VM_id': e.target.value });
 
         if (connectionInfo['is_active'] === 2) {
             setPromptConfigs(connectionInfo['prompt_configs']);
@@ -32,15 +33,13 @@ const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPr
             <Grid container style={{ gap: 5 }}>
                 {VMs.map((VM_id) => {
                     let isConnected = false;
-                    let connectionInfo = null;
-                    currentConnections.forEach((connection) => {
+                    Object.values(currentConnections).forEach((connection) => {
                         if (connection["VM_id"] === VM_id) {
                             isConnected = true;
-                            connectionInfo = connection
                         }
                     });
                     return (
-                        <Button key={VM_id} value={VM_id} color="primary" variant={currentSelected === VM_id ? 'contained' : 'outlined'} disabled={!isConnected} onClick={(e) => setAutoanswerConfigs(connectionInfo, e)}>
+                        <Button key={VM_id} value={VM_id} color="primary" variant={currentSelected === VM_id ? 'contained' : 'outlined'} disabled={!isConnected} onClick={(e) => setAutoanswerConfigs(e)}>
                             {VM_id.replace('_', ' ')}
                         </Button>
                     );
