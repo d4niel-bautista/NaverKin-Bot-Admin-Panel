@@ -121,11 +121,12 @@ const IncreaseLevel = () => {
         e.preventDefault();
         setLoadingState(true);
 
-        if (!levelupAccount) {
+        if (!rowSelectionModel.length || !connectionInfo["VM_id"]) {
+            setLoadingState(false);
             return;
         }
 
-        const autoanswerBotData = { 'connection_info': connectionInfo, 'levelup_account': levelupAccount, 'botconfigs': botConfigs, 'prompt_configs': promptConfigs }
+        const autoanswerBotData = { 'connection_info': connectionInfo, 'levelup_accounts': rowSelectionModel, 'botconfigs': botConfigs, 'prompt_configs': promptConfigs }
         const response = await fetch(serverAPI + "/start_autoanswerbot", {
             method: "POST",
             body: JSON.stringify(autoanswerBotData),
@@ -144,11 +145,10 @@ const IncreaseLevel = () => {
                     ...connections[connectionInfo["VM_id"]],
                     is_active: 2,
                     prompt_configs: promptConfigs,
-                    account: levelupAccount,
+                    accounts: rowSelectionModel,
                     botconfigs: botConfigs
                 }
             }));
-            currentlyRunningAccounts.current.push(levelupAccount.id);
         }
         setLoadingState(false);
     };
@@ -164,7 +164,7 @@ const IncreaseLevel = () => {
             <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setConnectionInfo={setConnectionInfo} setDisableAll={setDisableAll} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
-                    Configuration {levelupAccount.id && `[${levelupAccount.username}]`}
+                    Configuration
                 </Typography>
                 <Grid container rowSpacing={3}>
                     <BotConfigs tempBotConfigs={tempBotConfigs} setTempBotConfigs={setTempBotConfigs} />
