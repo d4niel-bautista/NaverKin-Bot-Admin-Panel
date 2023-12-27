@@ -216,7 +216,7 @@ const AccountsDataGrid = () => {
                 }}
                 initialState={{
                     pagination: {
-                        paginationModel: { page: 0, pageSize: 20 },
+                        paginationModel: { page: 0, pageSize: 10 },
                     },
                     columns: {
                         columnVisibilityModel: {
