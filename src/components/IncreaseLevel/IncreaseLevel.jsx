@@ -1,10 +1,17 @@
-import { Backdrop, Box, Button, CircularProgress, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import BotConfigs from './BotConfigs';
 import PromptConfigs from './PromptConfigs';
 import RunningInstances from './RunningInstances';
+import { DataGrid } from '@mui/x-data-grid';
+import StartAutoanswerBotToolbarComponent from './StartAutoanswerBotToolbarComponent';
+
+const columns = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'username', headerName: 'Username', width: 100 },
+];
 
 const IncreaseLevel = () => {
     const [botConfigs, setBotConfigs] = useState({ 'submit_delay': 120, 'page_refresh': 600, 'answers_per_day': 10, 'cooldown': 64800 });
@@ -20,6 +27,7 @@ const IncreaseLevel = () => {
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
     const [disableAll, setDisableAll] = useState(true);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
     useEffect(() => {
         const fetchAutoanswerBotConfigs = async () => {
@@ -67,11 +75,6 @@ const IncreaseLevel = () => {
         fetchAutoanswerBotConfigs();
         fetchAutoanswerBotConnections();
     }, []);
-
-    const changeLevelupAccount = async (e) => {
-        const { value } = e.target;
-        setLevelupAccount(levelupAccounts.find(account => account.id === value));
-    };
 
     const revertChanges = () => {
         setTempBotConfigs(botConfigs);
@@ -180,22 +183,42 @@ const IncreaseLevel = () => {
                     </Grid>
                 </Grid>
             </Box>
-            <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px' }}>
-                <Grid container columnSpacing={2} alignItems={'center'}>
-                    <Grid item>
-                        <TextField select label="Account" name="levelup_account" value={levelupAccount.id} onChange={changeLevelupAccount} sx={{ width: '200px' }}>
-                            {levelupAccounts.map((account) =>
-                                <MenuItem key={account.id} value={account.id} disabled={currentlyRunningAccounts.current.includes(account.id)}>{account.username}</MenuItem>
-                            )}
-                        </TextField>
-                    </Grid>
-                    <Grid item>
-                        <Button color="primary" variant="contained" onClick={startAutoanswerBot} disabled={!levelupAccount.id || loadingState || disableAll}>
-                            Start
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Box>
+            <DataGrid
+                sx={{
+                    '.MuiDataGrid-columnHeaders': {
+                        backgroundColor: '#e7e5e1',
+                    },
+                    '.MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold'
+                    },
+                    maxHeight: '30vh',
+                    maxWidth: '500px',
+                }}
+                columns={columns}
+                rows={levelupAccounts}
+                checkboxSelection
+                slots={{ toolbar: StartAutoanswerBotToolbarComponent }}
+                slotProps={{
+                    toolbar: {
+                        startAutoanswerBot,
+                        rowSelectionModel,
+                        loadingState,
+                    },
+                }}
+                initialState={{
+                    pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                    },
+                    columns: {
+                        columnVisibilityModel: {
+                            id: false,
+                        },
+                    },
+                }}
+                pageSizeOptions={[5, 10, 20]}
+                rowSelectionModel={rowSelectionModel}
+                onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
+            />
         </>
     );
 };
