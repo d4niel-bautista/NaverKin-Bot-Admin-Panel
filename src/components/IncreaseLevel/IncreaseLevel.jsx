@@ -11,6 +11,7 @@ import StartAutoanswerBotToolbarComponent from './StartAutoanswerBotToolbarCompo
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'Username', width: 100 },
+    { field: 'level', headerName: 'Level', width: 70 },
 ];
 
 const IncreaseLevel = () => {
