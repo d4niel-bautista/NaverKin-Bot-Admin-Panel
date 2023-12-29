@@ -191,12 +191,12 @@ const IncreaseLevel = () => {
                     '.MuiDataGrid-columnHeaderTitle': {
                         fontWeight: 'bold'
                     },
-                    maxHeight: '30vh',
+                    maxHeight: '700px',
                     maxWidth: '500px',
                 }}
                 columns={columns}
                 rows={levelupAccounts}
-                checkboxSelection
+                checkboxSelection={connectionInfo["VM_id"]}
                 slots={{ toolbar: StartAutoanswerBotToolbarComponent }}
                 slotProps={{
                     toolbar: {
