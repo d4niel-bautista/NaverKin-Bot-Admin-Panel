@@ -202,6 +202,7 @@ const IncreaseLevel = () => {
                     toolbar: {
                         startAutoanswerBot,
                         rowSelectionModel,
+                        VM_id: connectionInfo["VM_id"],
                         loadingState,
                     },
                 }}
