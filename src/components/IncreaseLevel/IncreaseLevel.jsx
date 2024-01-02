@@ -22,7 +22,6 @@ const IncreaseLevel = () => {
     const [promptConfigs, setPromptConfigs] = useState({ 'id': '', 'prompt': '', 'postscript': '', 'prohibited_words': '' });
     const [levelupAccounts, setLevelupAccounts] = useState([]);
     const currentlyRunningAccounts = useRef([]);
-    const [levelupAccount, setLevelupAccount] = useState({ "id": '' });
     const [connectionInfo, setConnectionInfo] = useState({});
     const [loadingState, setLoadingState] = useState(false);
     const [token] = useContext(AuthContext);
@@ -67,7 +66,7 @@ const IncreaseLevel = () => {
                     }
                     connections[connection["VM_id"]] = connection;
                     if (connection["is_active"] === 2) {
-                        currentlyRunningAccounts.current.push(connection["account"]["id"]);
+                        connection["account_ids"].forEach((account_id) => currentlyRunningAccounts.current.push(account_id));
                     }
                 });
                 setAutoanswerbotConnections(connections);
@@ -162,7 +161,7 @@ const IncreaseLevel = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setLevelupAccount={setLevelupAccount} setConnectionInfo={setConnectionInfo} setDisableAll={setDisableAll} />
+            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setConnectionInfo={setConnectionInfo} setDisableAll={setDisableAll} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
                     Configuration
@@ -197,13 +196,13 @@ const IncreaseLevel = () => {
                 }}
                 columns={columns}
                 rows={levelupAccounts}
-                checkboxSelection={connectionInfo["VM_id"]}
+                checkboxSelection={connectionInfo["VM_id"] ? true : false}
                 slots={{ toolbar: StartAutoanswerBotToolbarComponent }}
                 slotProps={{
                     toolbar: {
                         startAutoanswerBot,
                         rowSelectionModel,
-                        VM_id: connectionInfo["VM_id"],
+                        connectionInfo,
                         loadingState,
                     },
                 }}
@@ -218,6 +217,7 @@ const IncreaseLevel = () => {
                     },
                 }}
                 pageSizeOptions={[5, 10, 20]}
+                isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id)}
                 rowSelectionModel={rowSelectionModel}
                 onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
             />

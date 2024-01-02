@@ -3,7 +3,7 @@ import { GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import React from 'react';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
-const StartAutoanswerBotToolbarComponent = ({ startAutoanswerBot, rowSelectionModel, VM_id, loadingState }) => {
+const StartAutoanswerBotToolbarComponent = ({ startAutoanswerBot, rowSelectionModel, connectionInfo, loadingState }) => {
     return (
         <GridToolbarContainer>
             <Grid container columnSpacing={12} rowSpacing={2}>
@@ -14,7 +14,7 @@ const StartAutoanswerBotToolbarComponent = ({ startAutoanswerBot, rowSelectionMo
                         startIcon={<KeyboardDoubleArrowUpIcon />}
                         sx={{ fontWeight: 'bold' }}
                         onClick={startAutoanswerBot}
-                        disabled={!VM_id || !rowSelectionModel.length || loadingState}
+                        disabled={!connectionInfo["VM_id"] || connectionInfo["is_active"] === 2 || !rowSelectionModel.length || loadingState}
                     >
                         Start
                     </Button>
