@@ -149,6 +149,12 @@ const IncreaseLevel = () => {
                     botconfigs: botConfigs
                 }
             }));
+            setConnectionInfo((connectionInfo) => ({
+                ...connectionInfo,
+                is_active: 2
+            }));
+            rowSelectionModel.forEach((account_id) => currentlyRunningAccounts.current.push(account_id));
+            setRowSelectionModel([]);
         }
         setLoadingState(false);
     };
