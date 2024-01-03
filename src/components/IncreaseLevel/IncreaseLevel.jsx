@@ -26,7 +26,6 @@ const IncreaseLevel = () => {
     const [loadingState, setLoadingState] = useState(false);
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
-    const [disableAll, setDisableAll] = useState(true);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
     useEffect(() => {
@@ -138,7 +137,6 @@ const IncreaseLevel = () => {
 
         if (response.ok) {
             const data = await response.json();
-            setDisableAll(true);
             setAutoanswerbotConnections((connections) => ({
                 ...connections,
                 [connectionInfo["VM_id"]]: {
@@ -167,7 +165,7 @@ const IncreaseLevel = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setConnectionInfo={setConnectionInfo} setDisableAll={setDisableAll} />
+            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setConnectionInfo={setConnectionInfo} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
                     Configuration
@@ -177,12 +175,12 @@ const IncreaseLevel = () => {
                     <PromptConfigs promptConfigs={promptConfigs} setPromptConfigs={setPromptConfigs} />
                     <Grid container item columnSpacing={2} sx={{ marginTop: -2, marginLeft: 21 }}>
                         <Grid item>
-                            <Button color="secondary" variant="contained" onClick={revertChanges} disabled={loadingState || disableAll}>
+                            <Button color="secondary" variant="contained" onClick={revertChanges} disabled={loadingState || connectionInfo['is_active'] === 2}>
                                 Cancel
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button color="primary" variant="contained" onClick={updateChanges} disabled={loadingState || disableAll}>
+                            <Button color="primary" variant="contained" onClick={updateChanges} disabled={loadingState || connectionInfo['is_active'] === 2}>
                                 Update
                             </Button>
                         </Grid>

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const VMs = ['VM_1', 'VM_2', 'VM_3']
 
-const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setConnectionInfo, setDisableAll }) => {
+const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPromptConfigs, setTempBotConfigs, setConnectionInfo }) => {
     const [currentSelected, setCurrentSelected] = useState('');
 
     const setAutoanswerConfigs = (e) => {
@@ -20,7 +20,6 @@ const RunningInstances = ({ currentConnections, botConfigs, promptConfigs, setPr
             }
             setTempBotConfigs(botConfigs);
         }
-        setDisableAll(connectionInfo['is_active'] === 2 ? true : false);
     };
 
     return (
