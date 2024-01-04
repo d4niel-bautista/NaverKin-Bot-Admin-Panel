@@ -9,6 +9,7 @@ import SaveAccount from './SaveAccount';
 import { addIndices } from '../../utils/addIndices';
 import MUINewWindow from '../MUINewWindow/MUINewWindow';
 import { Box } from '@mui/material';
+import clsx from 'clsx';
 const moment = require('moment');
 
 const columnsInitial = [
@@ -42,7 +43,15 @@ const columnsInitial = [
         getOptionValue: (value) => value.value,
         getOptionLabel: (value) => value.label,
         valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }],
-        cellClassName: 'super-app-theme--cell',
+        cellClassName: (params) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            return clsx('super-app', {
+                verified: params.value === true,
+            });
+        },
     },
     { field: 'last_login', headerName: 'Last Login', width: 100 },
     { field: 'account_url', headerName: 'Profile URL', width: 120 },
@@ -192,7 +201,7 @@ const AccountsDataGrid = () => {
             )}
             <Box
                 sx={{
-                    '& .super-app-theme--cell': {
+                    '& .super-app.verified': {
                         fontWeight: 'bold',
                     },
                 }}
@@ -203,9 +212,6 @@ const AccountsDataGrid = () => {
                             backgroundColor: '#e7e5e1',
                         },
                         '.MuiDataGrid-columnHeaderTitle': {
-                            fontWeight: 'bold'
-                        },
-                        '[data-field]="verified"': {
                             fontWeight: 'bold'
                         },
                         maxHeight: '80vh',
