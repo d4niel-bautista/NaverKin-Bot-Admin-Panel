@@ -33,6 +33,7 @@ const columns = [
             });
         },
     },
+    { field: 'status', headerName: 'Status', width: 70 },
 ];
 
 const IncreaseLevel = () => {
@@ -246,11 +247,12 @@ const IncreaseLevel = () => {
                         columns: {
                             columnVisibilityModel: {
                                 id: false,
+                                status: false
                             },
                         },
                     }}
                     pageSizeOptions={[5, 10, 20]}
-                    isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id)}
+                    isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id) || params.row.status === 1}
                     rowSelectionModel={rowSelectionModel}
                     onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
                 />
