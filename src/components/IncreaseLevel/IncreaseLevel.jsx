@@ -7,11 +7,32 @@ import PromptConfigs from './PromptConfigs';
 import RunningInstances from './RunningInstances';
 import { DataGrid } from '@mui/x-data-grid';
 import StartAutoanswerBotToolbarComponent from './StartAutoanswerBotToolbarComponent';
+import clsx from 'clsx';
+import { addIndices } from '../../utils/addIndices';
 
 const columns = [
+    { field: 'index', headerName: '#', width: 10 },
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'username', headerName: 'Username', width: 100 },
     { field: 'level', headerName: 'Level', width: 70 },
+    {
+        field: 'verified',
+        headerName: 'Verified', width: 80,
+        type: 'singleSelect',
+        editable: true,
+        getOptionValue: (value) => value.value,
+        getOptionLabel: (value) => value.label,
+        valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }],
+        cellClassName: (params) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            return clsx('super-app', {
+                verified: params.value === true,
+            });
+        },
+    },
 ];
 
 const IncreaseLevel = () => {
@@ -44,6 +65,7 @@ const IncreaseLevel = () => {
                 setTempBotConfigs(data.botconfigs);
                 setPromptConfigsList(data.prompt_configs);
                 setPromptConfigs(data.prompt_configs[0]);
+                addIndices(data.levelup_accounts);
                 setLevelupAccounts(data.levelup_accounts);
             }
         };
@@ -187,44 +209,52 @@ const IncreaseLevel = () => {
                     </Grid>
                 </Grid>
             </Box>
-            <DataGrid
+            <Box
                 sx={{
-                    '.MuiDataGrid-columnHeaders': {
-                        backgroundColor: '#e7e5e1',
-                    },
-                    '.MuiDataGrid-columnHeaderTitle': {
-                        fontWeight: 'bold'
-                    },
-                    maxHeight: '700px',
-                    maxWidth: '500px',
-                }}
-                columns={columns}
-                rows={levelupAccounts}
-                checkboxSelection={connectionInfo["VM_id"] ? true : false}
-                slots={{ toolbar: StartAutoanswerBotToolbarComponent }}
-                slotProps={{
-                    toolbar: {
-                        startAutoanswerBot,
-                        rowSelectionModel,
-                        connectionInfo,
-                        loadingState,
+                    '& .super-app.verified': {
+                        fontWeight: 'bold',
                     },
                 }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                    },
-                    columns: {
-                        columnVisibilityModel: {
-                            id: false,
+            >
+                <DataGrid
+                    sx={{
+                        '.MuiDataGrid-columnHeaders': {
+                            backgroundColor: '#e7e5e1',
                         },
-                    },
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id)}
-                rowSelectionModel={rowSelectionModel}
-                onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
-            />
+                        '.MuiDataGrid-columnHeaderTitle': {
+                            fontWeight: 'bold'
+                        },
+                        maxHeight: '700px',
+                        maxWidth: '500px',
+                    }}
+                    columns={columns}
+                    rows={levelupAccounts}
+                    checkboxSelection={connectionInfo["VM_id"] ? true : false}
+                    slots={{ toolbar: StartAutoanswerBotToolbarComponent }}
+                    slotProps={{
+                        toolbar: {
+                            startAutoanswerBot,
+                            rowSelectionModel,
+                            connectionInfo,
+                            loadingState,
+                        },
+                    }}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 10 },
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                id: false,
+                            },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10, 20]}
+                    isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id)}
+                    rowSelectionModel={rowSelectionModel}
+                    onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
+                />
+            </Box>
         </>
     );
 };
