@@ -8,6 +8,7 @@ import DataGridToolbar from './DataGridToolbar';
 import SaveAccount from './SaveAccount';
 import { addIndices } from '../../utils/addIndices';
 import MUINewWindow from '../MUINewWindow/MUINewWindow';
+import { Box } from '@mui/material';
 const moment = require('moment');
 
 const columnsInitial = [
@@ -40,7 +41,8 @@ const columnsInitial = [
         editable: true,
         getOptionValue: (value) => value.value,
         getOptionLabel: (value) => value.label,
-        valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }]
+        valueOptions: [{ 'value': true, 'label': 'Yes' }, { 'value': false, 'label': 'No' }],
+        cellClassName: 'super-app-theme--cell',
     },
     { field: 'last_login', headerName: 'Last Login', width: 100 },
     { field: 'account_url', headerName: 'Profile URL', width: 120 },
@@ -188,51 +190,62 @@ const AccountsDataGrid = () => {
                     <SaveAccount action="edit" account={accountToEdit} categories={categories} token={token} serverAPI={serverAPI} setAccounts={setAccounts} />
                 </MUINewWindow>
             )}
-            <DataGrid
+            <Box
                 sx={{
-                    '.MuiDataGrid-columnHeaders': {
-                        backgroundColor: '#e7e5e1',
-                    },
-                    '.MuiDataGrid-columnHeaderTitle': {
-                        fontWeight: 'bold'
-                    },
-                    maxHeight: '80vh',
-                    maxWidth: '75vw',
-                }}
-                rows={accounts}
-                columns={columns}
-                slots={{ toolbar: DataGridToolbar }}
-                slotProps={{
-                    toolbar: {
-                        rowSelectionModel,
-                        selectedUsernames,
-                        accounts,
-                        setAccounts,
-                        setSnackbar,
-                        categories,
-                        token,
-                        serverAPI
+                    '& .super-app-theme--cell': {
+                        fontWeight: 'bold',
                     },
                 }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                    },
-                    columns: {
-                        columnVisibilityModel: {
-                            id: false,
+            >
+                <DataGrid
+                    sx={{
+                        '.MuiDataGrid-columnHeaders': {
+                            backgroundColor: '#e7e5e1',
                         },
-                    },
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                checkboxSelection
-                disableRowSelectionOnClick
-                rowSelectionModel={rowSelectionModel}
-                onRowSelectionModelChange={handleRowSelectionModelChange}
-                processRowUpdate={onRowUpdate}
-                onProcessRowUpdateError={(error) => console.log(error)}
-                onCellDoubleClick={(params, event) => handleCellDoubleClick(params, event)}
-            />
+                        '.MuiDataGrid-columnHeaderTitle': {
+                            fontWeight: 'bold'
+                        },
+                        '[data-field]="verified"': {
+                            fontWeight: 'bold'
+                        },
+                        maxHeight: '80vh',
+                        maxWidth: '75vw',
+                    }}
+                    rows={accounts}
+                    columns={columns}
+                    slots={{ toolbar: DataGridToolbar }}
+                    slotProps={{
+                        toolbar: {
+                            rowSelectionModel,
+                            selectedUsernames,
+                            accounts,
+                            setAccounts,
+                            setSnackbar,
+                            categories,
+                            token,
+                            serverAPI
+                        },
+                    }}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 10 },
+                        },
+                        columns: {
+                            columnVisibilityModel: {
+                                id: false,
+                            },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10, 20]}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    rowSelectionModel={rowSelectionModel}
+                    onRowSelectionModelChange={handleRowSelectionModelChange}
+                    processRowUpdate={onRowUpdate}
+                    onProcessRowUpdateError={(error) => console.log(error)}
+                    onCellDoubleClick={(params, event) => handleCellDoubleClick(params, event)}
+                />
+            </Box>
             <AlertSnackbar
                 open={snackbar.open}
                 severity={snackbar.severity}
