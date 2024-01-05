@@ -152,6 +152,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                     <MenuItem
                                         key={item.id}
                                         value={item.id}
+                                        disabled={item.status !== 0}
                                     >
                                         {item.username}
                                         {item.category > 1 &&
@@ -178,6 +179,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                     <MenuItem
                                         key={item.id}
                                         value={item.id}
+                                        disabled={item.status !== 0}
                                     >
                                         {item.username}
                                         {item.category > 1 &&
@@ -204,6 +206,7 @@ const AccountsSelectionDetails = ({ selectedAccounts, formType, setAlert, setDis
                                     <MenuItem
                                         key={item.id}
                                         value={item.id}
+                                        disabled={item.status !== 0}
                                     >
                                         {item.username}
                                         {item.category > 1 &&
