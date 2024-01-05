@@ -7,7 +7,6 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { AuthContext } from '../../context/AuthProvider';
 import { ServerAPIContext } from '../../context/ServerAPIProvider';
 import AccountsSelection from './AccountsSelection';
-import { combineObjectArrayByProperty } from '../../utils/combineObjectArrayByProperty';
 
 const QuestionAnswerForm = () => {
     const [formType, setFormType] = useState("1:2")
@@ -22,7 +21,6 @@ const QuestionAnswerForm = () => {
     const [answerExposurePromptConfigs, setAnswerExposurePromptConfigs] = useState({ 'query': '', 'prompt': '' });
     const [prohibitedWords, setProhibitedWords] = useState("");
     const [interactions, setInteractions] = useState([]);
-    const [accounts, setAccounts] = useState({});
     const [token] = useContext(AuthContext);
     const [serverAPI] = useContext(ServerAPIContext);
 
@@ -58,25 +56,8 @@ const QuestionAnswerForm = () => {
                 setInteractions(data);
             }
         };
-        const fetchAccounts = async () => {
-            const response = await fetch(serverAPI + "/accounts", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token,
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const combinedObject = combineObjectArrayByProperty(data, 'username');
-                setAccounts(combinedObject);
-                console.log(combinedObject);
-            }
-        };
         fetchInteractions();
         getPromptConfigs();
-        fetchAccounts();
     }, [])
 
     const handleTextChange = (field, text) => {
