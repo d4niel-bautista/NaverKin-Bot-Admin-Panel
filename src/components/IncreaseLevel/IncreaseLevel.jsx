@@ -225,6 +225,9 @@ const IncreaseLevel = () => {
                         '.MuiDataGrid-columnHeaderTitle': {
                             fontWeight: 'bold'
                         },
+                        '.unselectable': {
+                            opacity: 0.38
+                        },
                         maxHeight: '700px',
                         maxWidth: '500px',
                     }}
@@ -252,7 +255,8 @@ const IncreaseLevel = () => {
                         },
                     }}
                     pageSizeOptions={[5, 10, 20]}
-                    isRowSelectable={(params) => !currentlyRunningAccounts.current.includes(params.row.id) || params.row.status === 1}
+                    getRowClassName={(params) => `${params.row.status !== 0 || currentlyRunningAccounts.current.includes(params.row.id) ? 'unselectable' : 'available'}`}
+                    isRowSelectable={(params) => { return !currentlyRunningAccounts.current.includes(params.row.id) && params.row.status === 0 }}
                     rowSelectionModel={rowSelectionModel}
                     onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
                 />
