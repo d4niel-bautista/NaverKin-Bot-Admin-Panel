@@ -188,7 +188,7 @@ const IncreaseLevel = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setConnectionInfo={setConnectionInfo} />
+            <RunningInstances currentConnections={autoanswerbotConnections} botConfigs={botConfigs} promptConfigs={promptConfigsList[0]} setTempBotConfigs={setTempBotConfigs} setPromptConfigs={setPromptConfigs} setConnectionInfo={setConnectionInfo} setRowSelectionModel={setRowSelectionModel} />
             <Box sx={{ border: 1, borderColor: '#e0e0e0', borderRadius: 1, padding: '12px', marginBottom: 2 }}>
                 <Typography variant='h5' marginBottom={3}>
                     Configuration
