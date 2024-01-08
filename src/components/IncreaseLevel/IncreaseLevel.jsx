@@ -166,7 +166,7 @@ const IncreaseLevel = () => {
                     ...connections[connectionInfo["VM_id"]],
                     is_active: 2,
                     prompt_configs: promptConfigs,
-                    accounts: rowSelectionModel,
+                    account_ids: rowSelectionModel,
                     botconfigs: botConfigs
                 }
             }));
@@ -175,7 +175,6 @@ const IncreaseLevel = () => {
                 is_active: 2
             }));
             rowSelectionModel.forEach((account_id) => currentlyRunningAccounts.current.push(account_id));
-            setRowSelectionModel([]);
         }
         setLoadingState(false);
     };
